@@ -1,0 +1,7 @@
+Crew - "C"
+Passenger - "P"
+Cargo - "CA"
+CargoPlane - "CP"
+PassengerPlane - "PP"
+Airport - "AI"
+Flight - "FL"
