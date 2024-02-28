@@ -25,7 +25,7 @@ namespace OOD_24L_01180689.src.readers
 
                     if (factoryMethods.TryGetValue(objectType, out var factoryMethod))
                     {
-                        var obj = factoryMethod(data);
+                        var obj = factoryMethod.Create(data);
                         objects.Add(obj);
                     }
                     else
@@ -39,9 +39,9 @@ namespace OOD_24L_01180689.src.readers
         }
     }
 
-    public class FTRReaderFactory : FileReaderFactory
+    public class FTRReaderFactory : IFileReaderFactory
     {
-        public override IDataSource Create()
+        public IDataSource Create()
         {
             return new FTRReader();
         }

@@ -2,12 +2,12 @@
 
 namespace OOD_24L_01180689.src.factories
 {
-    public interface IFileWriterFactory<T> where T : IWriter
+    public interface IFileWriterFactory
     {
-        T Create();
+        IWriter Create();
     }
 
-    public class FileWriterFactory : IFileWriterFactory<IWriter>
+    public class FileWriterFactory : IFileWriterFactory
     {
         public virtual IWriter Create()
         {

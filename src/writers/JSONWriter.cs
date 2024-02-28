@@ -23,9 +23,9 @@ namespace OOD_24L_01180689.src.writers
         }
     }
 
-    public class JSONWriterFactory : FileWriterFactory
+    public class JSONWriterFactory : IFileWriterFactory
     {
-        public override IWriter Create()
+        public IWriter Create()
         {
             return new JSONWriter();
         }

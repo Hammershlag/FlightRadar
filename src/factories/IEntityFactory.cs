@@ -1,13 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Globalization;
-using System.Linq;
-using OOD_24L_01180689.src.dto;
-using OOD_24L_01180689.src.dto.airports;
-using OOD_24L_01180689.src.dto.cargo;
-using OOD_24L_01180689.src.dto.flights;
-using OOD_24L_01180689.src.dto.people;
-using OOD_24L_01180689.src.dto.planes;
+﻿using OOD_24L_01180689.src.dto;
 
 namespace OOD_24L_01180689.src.factories
 {

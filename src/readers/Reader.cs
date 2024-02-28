@@ -3,34 +3,22 @@ using OOD_24L_01180689.src.dto.cargo;
 using OOD_24L_01180689.src.dto.flights;
 using OOD_24L_01180689.src.dto.people;
 using OOD_24L_01180689.src.dto.planes;
+using OOD_24L_01180689.src.factories;
 
 namespace OOD_24L_01180689.src.readers
 {
     public class Reader : IDataSource
     {
-        protected readonly Dictionary<string, Func<string[], object>> factoryMethods;
-
-        public Reader()
+        protected static readonly Dictionary<string, EntityFactory> factoryMethods = new Dictionary<string, EntityFactory>
         {
-            var cargoPlaneFactory = new CargoPlaneFactory();
-            var passengerPlaneFactory = new PassengerPlaneFactory();
-            var airportFactory = new AirportFactory();
-            var cargoFactory = new CargoFactory();
-            var flightFactory = new FlightFactory();
-            var crewFactory = new CrewFactory();
-            var passengerFactory = new PassengerFactory();
-
-            factoryMethods = new Dictionary<string, Func<string[], object>>
-            {
-                { "CP", cargoPlaneFactory.Create },
-                { "PP", passengerPlaneFactory.Create },
-                { "AI", airportFactory.Create },
-                { "CA", cargoFactory.Create },
-                { "FL", flightFactory.Create },
-                { "C", crewFactory.Create },
-                { "P", passengerFactory.Create }
-            };
-        }
+            { "CP", new CargoPlaneFactory()},
+            { "PP", new PassengerPlaneFactory()},
+            { "AI", new AirportFactory()},
+            { "CA", new CargoFactory()},
+            { "FL", new FlightFactory()},
+            { "C", new CrewFactory()},
+            { "P", new PassengerFactory()}
+        };
 
         public virtual IEnumerable<object> ReadData(string dir, string filename)
         {
