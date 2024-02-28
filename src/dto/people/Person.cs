@@ -2,10 +2,10 @@
 {
     public abstract class Person : Entity
     {
-        public string Name { get; set; }
-        public UInt64 Age { get; set; }
-        public string Phone { get; set; }
-        public string Email { get; set; }
+        public string Name { get; protected set; }
+        public UInt64 Age { get; protected set; }
+        public string Phone { get; protected set; }
+        public string Email { get; protected set; }
 
         protected Person(string type, UInt64 id, string name, UInt64 age, string phone, string email) :
             base(type, id)

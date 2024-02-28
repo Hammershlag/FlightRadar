@@ -2,8 +2,8 @@
 {
     public abstract class Entity
     {
-        public string Type { get; set; }
-        public UInt64 ID { get; set; }
+        public string Type { get; protected set; } //TODO should all fields be obly get? or get, set???
+        public UInt64 ID { get; protected set;  }
 
         protected Entity(string type, UInt64 ID)
         {

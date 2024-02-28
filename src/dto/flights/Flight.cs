@@ -6,16 +6,16 @@ namespace OOD_24L_01180689.src.dto.flights
     //"FL"
     public class Flight : Entity
     {
-        public ulong OriginID { get; set; }
-        public ulong TargetID { get; set; }
-        public string TakeOffTime { get; set; }
-        public string LandingTime { get; set; }
-        public float Longitude { get; set; }
-        public float Latitude { get; set; }
-        public float AMSL { get; set; }
-        public ulong PlaneID { get; set; }
-        public ulong[] CrewID { get; set; }
-        public ulong[] LoadID { get; set; }
+        public ulong OriginID { get; protected set; }
+        public ulong TargetID { get; protected set; }
+        public string TakeOffTime { get; protected set; }
+        public string LandingTime { get; protected set; }
+        public float Longitude { get; protected set; }
+        public float Latitude { get; protected set; }
+        public float AMSL { get; protected set; }
+        public ulong PlaneID { get; protected set; }
+        public ulong[] CrewID { get; protected set; }
+        public ulong[] LoadID { get; protected set; }
 
         public Flight(string type, UInt64 id, ulong originID, ulong targetID, string takeOffTime, string landingTime, float longitude, float latitude, float amsl, ulong planeID, ulong[] crewID, ulong[] loadID) :
             base(type, id)

@@ -2,9 +2,9 @@
 {
     public abstract class Plane : Entity
     {
-        public string Serial { get; set; }
-        public string CountryISO { get; set; }
-        public string Model { get; set; }
+        public string Serial { get; protected set; }
+        public string CountryISO { get; protected set; }
+        public string Model { get; protected set; }
 
         protected Plane(string type, UInt64 id, string serial, string countryISO, string model) :
             base(type, id)

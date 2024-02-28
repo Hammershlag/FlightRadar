@@ -5,8 +5,8 @@ namespace OOD_24L_01180689.src.dto.people
     //"C"
     public class Crew : Person
     {
-        public UInt16 Practice { get; set; }
-        public string Role { get; set; }
+        public UInt16 Practice { get; protected set; }
+        public string Role { get; protected set; }
 
         public Crew(string type, UInt64 id, string name, ulong age, string phone, string email, UInt16 practice, string role) :
             base(type, id, name, age, phone, email)

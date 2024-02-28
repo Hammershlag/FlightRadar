@@ -6,13 +6,13 @@ namespace OOD_24L_01180689.src.dto.airports
     //"AI"
     public class Airport : Entity
     {
-        public string Name { get; set; }
-        public string Code { get; set; }
-        public float Longitude { get; set; }
+        public string Name { get; protected set; }
+        public string Code { get; protected set; }
+        public float Longitude { get; protected set; }
 
-        public float Latitude { get; set; }
-        public float AMSL { get; set; }
-        public string CountryISO { get; set; }
+        public float Latitude { get; protected set; }
+        public float AMSL { get; protected set; }
+        public string CountryISO { get; protected set; }
 
         public Airport(string type, UInt64 id, string name, string code, float longitude, float latitude, float amsl, string countryISO) :
             base(type, id)

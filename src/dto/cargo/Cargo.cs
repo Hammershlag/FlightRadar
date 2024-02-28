@@ -6,9 +6,9 @@ namespace OOD_24L_01180689.src.dto.cargo
     //"CA"
     public class Cargo : Entity
     {
-        public float Weight { get; set; }
-        public string Code { get; set; }
-        public string Description { get; set; }
+        public float Weight { get; protected set; }
+        public string Code { get; protected set; }
+        public string Description { get; protected set; }
 
         public Cargo(string type, UInt64 id, float weight, string code, string description) :
             base(type, id)
