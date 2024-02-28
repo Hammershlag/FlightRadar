@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OOD_24L_01180689.src.factories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,6 @@ namespace OOD_24L_01180689.src.dto.people
     //"P"
     public class Passenger : Person
     {
-
         public string Class { get; set; }
         public ulong Miles { get; set; }
 
@@ -25,6 +25,23 @@ namespace OOD_24L_01180689.src.dto.people
         {
             return $"Passenger: {Type} {ID} {Name} {Age} {Phone} {Email} {Class} {Miles}";
         }
+    }
 
+    public class PassengerFactory : EntityFactory
+    {
+        public override Passenger Create(params string[] args)
+        {
+            if (args.Length != 8) return null;
+            return new Passenger(
+                args[0],
+                Convert.ToUInt64(args[1]),
+                args[2],
+                Convert.ToUInt64(args[3]),
+                args[4],
+                args[5],
+                args[6],
+                Convert.ToUInt64(args[7])
+            );
+        }
     }
 }

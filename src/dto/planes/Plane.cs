@@ -20,7 +20,6 @@ namespace OOD_24L_01180689.src.dto.planes
             Model = model;
         }
 
-
         public override string ToString()
         {
             return $"Plane: {Type} {ID} {Serial} {CountryISO} {Model}";

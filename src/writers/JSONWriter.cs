@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using OOD_24L_01180689.src.dto;
-using OOD_24L_01180689.src.dto.airports;
+﻿using System.Text.Json;
+using OOD_24L_01180689.src.factories;
 
 namespace OOD_24L_01180689.src.writers
 {
-    public class JSONWriter : IWriter
+    public class JSONWriter : Writer
     {
-        public void Write(IEnumerable<object> objects, string filePath)
+        public override void Write(IEnumerable<object> objects, string dir, string filename)
         {
+            var filePath = dir + "\\" + filename;
+
+            if (!filePath.EndsWith(".json"))
+            {
+                throw new ArgumentException("Invalid file type");
+            }
+
             var options = new JsonSerializerOptions
             {
                 WriteIndented = true
@@ -22,4 +23,11 @@ namespace OOD_24L_01180689.src.writers
         }
     }
 
+    public class JSONWriterFactory : FileWriterFactory
+    {
+        public override IWriter Create()
+        {
+            return new JSONWriter();
+        }
+    }
 }

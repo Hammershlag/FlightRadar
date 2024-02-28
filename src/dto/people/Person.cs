@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace OOD_24L_01180689.src.dto.people
 {
-
     public abstract class Person : Entity
     {
         public string Name { get; set; }
@@ -22,7 +21,6 @@ namespace OOD_24L_01180689.src.dto.people
             Phone = phone;
             Email = email;
         }
-
 
         public override string ToString()
         {

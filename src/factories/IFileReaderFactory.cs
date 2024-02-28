@@ -12,19 +12,11 @@ namespace OOD_24L_01180689.src.factories
         T Create();
     }
 
-    public class FileReaderFactory : IFileReaderFactory<IDataSource>
+    public abstract class FileReaderFactory : IFileReaderFactory<IDataSource>
     {
         public virtual IDataSource Create()
         {
             throw new NotImplementedException();
-        }
-    }
-
-    public class FTRReaderFactory : FileReaderFactory
-    {
-        public override IDataSource Create()
-        {
-            return new FTRReader();
         }
     }
 }
