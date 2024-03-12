@@ -7,7 +7,7 @@ namespace OOD_24L_01180689.src.writers
     {
         public override void Write(IEnumerable<object> objects, string dir, string filename)
         {
-            var filePath = dir + "\\" + filename;
+            var filePath = Path.Combine(dir, filename);
 
             if (!filePath.EndsWith(".json"))
             {

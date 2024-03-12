@@ -1,9 +1,25 @@
-﻿using OOD_24L_01180689.src.factories;
+﻿using OOD_24L_01180689.src.dto.airports;
+using OOD_24L_01180689.src.dto.cargo;
+using OOD_24L_01180689.src.dto.flights;
+using OOD_24L_01180689.src.dto.people;
+using OOD_24L_01180689.src.dto.planes;
+using OOD_24L_01180689.src.factories;
 using System;
 namespace OOD_24L_01180689.src.readers
 {
+
     public class FTRReader : Reader
     {
+        protected static readonly Dictionary<string, EntityFactory> factoryMethods = new Dictionary<string, EntityFactory>
+        {
+            { "CP", new CargoPlaneFactory()},
+            { "PP", new PassengerPlaneFactory()},
+            { "AI", new AirportFactory()},
+            { "CA", new CargoFactory()},
+            { "FL", new FlightFactory()},
+            { "C", new CrewFactory()},
+            { "P", new PassengerFactory()}
+        };
         public override IEnumerable<object> ReadData(string dir, string filename)
         {
             var filePath = dir + "\\" + filename;
@@ -13,7 +29,6 @@ namespace OOD_24L_01180689.src.readers
                 throw new ArgumentException("Invalid file type");
             }
 
-            var objects = new List<object>();
 
             using (var reader = new StreamReader(filePath))
             {
@@ -26,7 +41,10 @@ namespace OOD_24L_01180689.src.readers
                     if (factoryMethods.TryGetValue(objectType, out var factoryMethod))
                     {
                         var obj = factoryMethod.Create(data);
-                        objects.Add(obj);
+                        lock (Program.objectListLock)
+                        {
+                            Program.objectList.Add(obj);
+                        }
                     }
                     else
                     {
@@ -35,7 +53,7 @@ namespace OOD_24L_01180689.src.readers
                 }
             }
 
-            return objects;
+            return Program.objectList;
         }
     }
 

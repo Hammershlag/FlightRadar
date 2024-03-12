@@ -1,9 +1,12 @@
 ﻿using OOD_24L_01180689.src.factories;
 using System.Globalization;
+using NetworkSourceSimulator;
+using System.Text;
 
 namespace OOD_24L_01180689.src.dto.flights
 {
     //"FL"
+    //"NFL"
     public class Flight : Entity
     {
         public ulong OriginID { get; protected set; }
@@ -62,9 +65,47 @@ namespace OOD_24L_01180689.src.dto.flights
             );
         }
 
+        public override Flight Create(Message message)
+        {
+            byte[] messageBytes = message.MessageBytes;
+
+            if (messageBytes.Length < 59)
+                return null;
+
+            string code = Encoding.ASCII.GetString(messageBytes, 0, 3);
+            uint messageLength = BitConverter.ToUInt32(messageBytes, 3);
+            UInt64 id = BitConverter.ToUInt64(messageBytes, 7);
+            UInt64 originID = BitConverter.ToUInt64(messageBytes, 15);
+            UInt64 targetID = BitConverter.ToUInt64(messageBytes, 23);
+            string takeOffTime = DateTimeOffset.FromUnixTimeMilliseconds(BitConverter.ToInt64(messageBytes, 31)).ToString("yyyy-MM-dd HH:mm:ss");
+            string landingTime = DateTimeOffset.FromUnixTimeMilliseconds(BitConverter.ToInt64(messageBytes, 39)).ToString("yyyy-MM-dd HH:mm:ss");
+            UInt64 planeID = BitConverter.ToUInt64(messageBytes, 47);
+            ushort crewCount = BitConverter.ToUInt16(messageBytes, 55);
+            ulong[] crewID = ParseStringToUInt64Array(messageBytes, 57, crewCount);
+            ushort passengersCargoCount = BitConverter.ToUInt16(messageBytes, 57 + crewCount * 8);
+            ulong[] loadID = ParseStringToUInt64Array(messageBytes, 59 + crewCount * 8, passengersCargoCount);
+
+            // Set default values for Longitude, Latitude, and AMSL
+            float longitude = float.MinValue;
+            float latitude = float.MinValue;
+            float amsl = float.MinValue;
+
+            return new Flight(code, id, originID, targetID, takeOffTime, landingTime, longitude, latitude, amsl, planeID, crewID, loadID);
+        }
+
         private ulong[] ParseStringToUInt64Array(string str)
         {
             return str.Trim('[', ']').Split(';').Select(ulong.Parse).ToArray();
+        }
+
+        private ulong[] ParseStringToUInt64Array(byte[] bytes, int startIndex, int count)
+        {
+            ulong[] result = new ulong[count];
+            for (int i = 0; i < count; i++)
+            {
+                result[i] = BitConverter.ToUInt64(bytes, startIndex + i * 8);
+            }
+            return result;
         }
     }
 }

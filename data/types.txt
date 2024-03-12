@@ -5,3 +5,9 @@ CargoPlane - "CP"
 PassengerPlane - "PP"
 Airport - "AI"
 Flight - "FL"
+
+
+
+Run() run it in the different thread or it will block the app and run it at the beggining (at the beginning initialize Network Simulator by loading dll)
+App should run constantly and waits for server until user tells it to stop. Don't worry about snapshot. When closing app remember to kill server thread. 
+Dont read data at the beggining from the file
