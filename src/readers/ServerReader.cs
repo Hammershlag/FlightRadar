@@ -1,5 +1,4 @@
 ﻿using NetworkSourceSimulator;
-using OOD_24L_01180689.src.factories;
 using OOD_24L_01180689.src.serverSimulator;
 using System.Text;
 using OOD_24L_01180689.src.dataStorage;
@@ -57,21 +56,6 @@ namespace OOD_24L_01180689.src.readers
             {
                 Console.WriteLine($"Unsupported message type: {objectType}");
             }
-        }
-    }
-
-    public class ServerReaderFactory : IFileReaderFactory
-    {
-        private ServerSimulator _serverSimulator;
-
-        public ServerReaderFactory(ServerSimulator serverSimulator)
-        {
-            _serverSimulator = serverSimulator;
-        }
-
-        public IDataSource Create()
-        {
-            return new ServerReader(_serverSimulator);
         }
     }
 }

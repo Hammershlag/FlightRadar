@@ -1,9 +1,9 @@
-﻿using OOD_24L_01180689.src.factories;
-using OOD_24L_01180689.src.readers;
-using OOD_24L_01180689.src.writers;
+﻿using OOD_24L_01180689.src.writers;
 using OOD_24L_01180689.src.serverSimulator;
 using OOD_24L_01180689.src.dataStorage;
 using IDataSource = OOD_24L_01180689.src.readers.IDataSource;
+using OOD_24L_01180689.src.factories.readers;
+using OOD_24L_01180689.src.factories.writersFactories;
 
 class Program
 {
@@ -13,7 +13,7 @@ class Program
         string input = Path.Combine(dir, "data", "example1.ftr");
         string outputDir = "data";
         int minDelay = 10;
-        int maxDelay = 10;
+        int maxDelay = 100;
 
         var objectCountDisplay = ObjectCountDisplay.GetInstance;
         objectCountDisplay.Start();

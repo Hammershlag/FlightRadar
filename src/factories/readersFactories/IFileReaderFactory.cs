@@ -1,6 +1,6 @@
 ﻿using OOD_24L_01180689.src.readers;
 
-namespace OOD_24L_01180689.src.factories
+namespace OOD_24L_01180689.src.factories.readers
 {
     public interface IFileReaderFactory
     {

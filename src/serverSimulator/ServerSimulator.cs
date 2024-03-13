@@ -28,10 +28,7 @@ namespace OOD_24L_01180689.src.serverSimulator
             {
                 if (instance == null)
                 {
-                    if (instance == null)
-                    {
-                        instance = new ServerSimulator(input, minDelay, maxDelay);
-                    }
+                    instance = new ServerSimulator(input, minDelay, maxDelay);
                 }
             }
 

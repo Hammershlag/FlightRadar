@@ -1,5 +1,4 @@
 ﻿using OOD_24L_01180689.src.dataStorage;
-using OOD_24L_01180689.src.factories;
 using OOD_24L_01180689.src.factories.entityFactories;
 using OOD_24L_01180689.src.factories.entityFactories.airports;
 using OOD_24L_01180689.src.factories.entityFactories.cargo;
@@ -52,14 +51,6 @@ namespace OOD_24L_01180689.src.readers
                     }
                 }
             }
-        }
-    }
-
-    public class FTRReaderFactory : IFileReaderFactory
-    {
-        public IDataSource Create()
-        {
-            return new FTRReader();
         }
     }
 }
