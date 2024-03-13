@@ -1,7 +1,7 @@
 ﻿using NetworkSourceSimulator;
 using OOD_24L_01180689.src.dto;
 
-namespace OOD_24L_01180689.src.factories
+namespace OOD_24L_01180689.src.factories.entityFactories
 {
     public interface IEntityFactory<T> where T : Entity
     {

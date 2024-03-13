@@ -1,17 +1,14 @@
 ﻿using NetworkSourceSimulator;
-using OOD_24L_01180689.src.dto.airports;
-using OOD_24L_01180689.src.dto.cargo;
-using OOD_24L_01180689.src.dto.flights;
-using OOD_24L_01180689.src.dto.people;
-using OOD_24L_01180689.src.dto.planes;
 using OOD_24L_01180689.src.factories;
 using OOD_24L_01180689.src.serverSimulator;
-using NetworkSourceSimulator;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using OOD_24L_01180689.src.dataStorage;
+using OOD_24L_01180689.src.factories.entityFactories;
+using OOD_24L_01180689.src.factories.entityFactories.airports;
+using OOD_24L_01180689.src.factories.entityFactories.cargo;
+using OOD_24L_01180689.src.factories.entityFactories.flights;
+using OOD_24L_01180689.src.factories.entityFactories.people;
+using OOD_24L_01180689.src.factories.entityFactories.planes;
 
 namespace OOD_24L_01180689.src.readers
 {

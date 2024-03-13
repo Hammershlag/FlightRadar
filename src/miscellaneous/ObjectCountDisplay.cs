@@ -15,7 +15,7 @@ public class ObjectCountDisplay
         };
     }
 
-    public static ObjectCountDisplay Instance
+    public static ObjectCountDisplay GetInstance
     {
         get
         {

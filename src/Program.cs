@@ -1,9 +1,6 @@
-﻿using System;
-using System.IO;
-using OOD_24L_01180689.src.factories;
+﻿using OOD_24L_01180689.src.factories;
 using OOD_24L_01180689.src.readers;
 using OOD_24L_01180689.src.writers;
-using NetworkSourceSimulator;
 using OOD_24L_01180689.src.serverSimulator;
 using OOD_24L_01180689.src.dataStorage;
 using IDataSource = OOD_24L_01180689.src.readers.IDataSource;
@@ -18,7 +15,7 @@ class Program
         int minDelay = 10;
         int maxDelay = 10;
 
-        var objectCountDisplay = ObjectCountDisplay.Instance;
+        var objectCountDisplay = ObjectCountDisplay.GetInstance;
         objectCountDisplay.Start();
 
         ServerSimulator ss = ServerSimulator.GetInstance(input, minDelay, maxDelay);
@@ -34,7 +31,6 @@ class Program
         HandleConsoleInput(jsonWriter, dir, outputDir);
 
         ss.Stop();
-
         objectCountDisplay.Stop();
     }
 
