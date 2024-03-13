@@ -5,8 +5,8 @@ using System.Text;
 
 namespace OOD_24L_01180689.src.dto.cargo
 {
-    //"CA"
-    //"NCA"
+    //"CA" - FTR
+    //"NCA" - networkSource
     public class Cargo : Entity
     {
         public float Weight { get; protected set; }

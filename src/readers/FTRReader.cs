@@ -1,26 +1,29 @@
-﻿using OOD_24L_01180689.src.dto.airports;
+﻿using OOD_24L_01180689.src.dataStorage;
+using OOD_24L_01180689.src.dto.airports;
 using OOD_24L_01180689.src.dto.cargo;
 using OOD_24L_01180689.src.dto.flights;
 using OOD_24L_01180689.src.dto.people;
 using OOD_24L_01180689.src.dto.planes;
 using OOD_24L_01180689.src.factories;
 using System;
+
 namespace OOD_24L_01180689.src.readers
 {
-
     public class FTRReader : Reader
     {
-        protected static readonly Dictionary<string, EntityFactory> factoryMethods = new Dictionary<string, EntityFactory>
-        {
-            { "CP", new CargoPlaneFactory()},
-            { "PP", new PassengerPlaneFactory()},
-            { "AI", new AirportFactory()},
-            { "CA", new CargoFactory()},
-            { "FL", new FlightFactory()},
-            { "C", new CrewFactory()},
-            { "P", new PassengerFactory()}
-        };
-        public override IEnumerable<object> ReadData(string dir, string filename)
+        protected static readonly Dictionary<string, EntityFactory> factoryMethods =
+            new Dictionary<string, EntityFactory>
+            {
+                { "CP", new CargoPlaneFactory() },
+                { "PP", new PassengerPlaneFactory() },
+                { "AI", new AirportFactory() },
+                { "CA", new CargoFactory() },
+                { "FL", new FlightFactory() },
+                { "C", new CrewFactory() },
+                { "P", new PassengerFactory() }
+            };
+
+        public override void ReadData(string dir, string filename)
         {
             var filePath = dir + "\\" + filename;
 
@@ -41,10 +44,7 @@ namespace OOD_24L_01180689.src.readers
                     if (factoryMethods.TryGetValue(objectType, out var factoryMethod))
                     {
                         var obj = factoryMethod.Create(data);
-                        lock (Program.objectListLock)
-                        {
-                            Program.objectList.Add(obj);
-                        }
+                        DataStorage.Instance.Add(obj);
                     }
                     else
                     {
@@ -52,8 +52,6 @@ namespace OOD_24L_01180689.src.readers
                     }
                 }
             }
-
-            return Program.objectList;
         }
     }
 

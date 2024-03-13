@@ -2,6 +2,6 @@
 {
     public interface IDataSource
     {
-        IEnumerable<object> ReadData(string dir, string filename);
+        void ReadData(string dir, string filename);
     }
 }

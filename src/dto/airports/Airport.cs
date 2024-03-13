@@ -5,8 +5,8 @@ using System.Text;
 
 namespace OOD_24L_01180689.src.dto.airports
 {
-    //"AI"
-    //"NAI"
+    //"AI" - FTR
+    //"NAI" - networkSource
     public class Airport : Entity
     {
         public string Name { get; protected set; }
@@ -17,7 +17,8 @@ namespace OOD_24L_01180689.src.dto.airports
         public float AMSL { get; protected set; }
         public string CountryISO { get; protected set; }
 
-        public Airport(string type, UInt64 id, string name, string code, float longitude, float latitude, float amsl, string countryISO) :
+        public Airport(string type, UInt64 id, string name, string code, float longitude, float latitude, float amsl,
+            string countryISO) :
             base(type, id)
         {
             Name = name;
@@ -62,10 +63,8 @@ namespace OOD_24L_01180689.src.dto.airports
             string code = Encoding.ASCII.GetString(messageBytes, 0, 3);
             uint messageLength = BitConverter.ToUInt32(messageBytes, 3);
             UInt64 id = BitConverter.ToUInt64(messageBytes, 7);
-
             ushort nameLength = BitConverter.ToUInt16(messageBytes, 15);
             string name = Encoding.ASCII.GetString(messageBytes, 17, nameLength);
-
             string airportCode = Encoding.ASCII.GetString(messageBytes, 17 + nameLength, 3);
             float longitude = BitConverter.ToSingle(messageBytes, 20 + nameLength);
             float latitude = BitConverter.ToSingle(messageBytes, 24 + nameLength);

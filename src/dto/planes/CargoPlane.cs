@@ -4,8 +4,8 @@ using System.Text;
 
 namespace OOD_24L_01180689.src.dto.planes
 {
-    //"CP"
-    //"NCP"
+    //"CP" - FTR
+    //"NCP" - networkSource
     public class CargoPlane : Plane
     {
         public Single MaxLoad { get; protected set; }
@@ -50,10 +50,8 @@ namespace OOD_24L_01180689.src.dto.planes
             UInt64 id = BitConverter.ToUInt64(messageBytes, 7);
             string serial = Encoding.ASCII.GetString(messageBytes, 15, 10).TrimEnd('\0');
             string countryISO = Encoding.ASCII.GetString(messageBytes, 25, 3);
-
             ushort modelLength = BitConverter.ToUInt16(messageBytes, 28);
             string model = Encoding.ASCII.GetString(messageBytes, 30, modelLength);
-
             Single maxLoad = BitConverter.ToSingle(messageBytes, 30 + modelLength);
 
             return new CargoPlane(code, id, serial, countryISO, model, maxLoad);

@@ -11,23 +11,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using OOD_24L_01180689.src.dataStorage;
 
 namespace OOD_24L_01180689.src.readers
 {
     public class ServerReader : Reader
     {
-        protected static readonly Dictionary<string, EntityFactory> factoryMethods = new Dictionary<string, EntityFactory>
-        {
-            { "NCP", new CargoPlaneFactory()},
-            { "NPP", new PassengerPlaneFactory()},
-            { "NAI", new AirportFactory()},
-            { "NCA", new CargoFactory()},
-            { "NFL", new FlightFactory()},
-            { "NCR", new CrewFactory()},
-            { "NPA", new PassengerFactory()}
-        };
+        protected static readonly Dictionary<string, EntityFactory> factoryMethods =
+            new Dictionary<string, EntityFactory>
+            {
+                { "NCP", new CargoPlaneFactory() },
+                { "NPP", new PassengerPlaneFactory() },
+                { "NAI", new AirportFactory() },
+                { "NCA", new CargoFactory() },
+                { "NFL", new FlightFactory() },
+                { "NCR", new CrewFactory() },
+                { "NPA", new PassengerFactory() }
+            };
 
         public ServerReader(ServerSimulator serverSimulator)
         {
@@ -48,13 +48,8 @@ namespace OOD_24L_01180689.src.readers
             {
                 if (factoryMethods.TryGetValue(objectType, out var factoryMethod))
                 {
-                    
                     var obj = factoryMethod.Create(message);
-                    lock (Program.objectListLock)
-                    {
-                        Program.objectList.Add(obj);
-                    }
-
+                    DataStorage.Instance.Add(obj);
                 }
                 else
                 {

@@ -36,16 +36,14 @@ namespace OOD_24L_01180689.src.serverSimulator
                     }
                 }
             }
+
             return instance;
         }
 
         public void Run()
         {
             networkSourceInstance = new NetworkSourceSimulator.NetworkSourceSimulator(input, minDelay, maxDelay);
-            networkSourceInstance.OnNewDataReady += (sender, e) =>
-            {
-                OnDataReady?.Invoke(this, e);
-            };
+            networkSourceInstance.OnNewDataReady += (sender, e) => { OnDataReady?.Invoke(this, e); };
             networkSourceThread = StartNetworkSourceSimulator();
         }
 
@@ -61,7 +59,8 @@ namespace OOD_24L_01180689.src.serverSimulator
                 {
                     Console.WriteLine("Server Interrupted");
                 }
-            }); thread.Start();
+            });
+            thread.Start();
 
             return thread;
         }
