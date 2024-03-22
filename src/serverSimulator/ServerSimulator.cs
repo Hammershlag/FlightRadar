@@ -52,7 +52,7 @@ namespace OOD_24L_01180689.src.serverSimulator
                 }
                 catch (ThreadInterruptedException ex)
                 {
-                    Console.WriteLine("Server Interrupted");
+                    Console.WriteLine("Server Interrupted: " + ex.Message);
                 }
             });
             thread.Start();

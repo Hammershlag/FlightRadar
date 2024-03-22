@@ -11,6 +11,11 @@
             Type = type;
         }
 
+        public UInt64 getID()
+        {
+            return ID;
+        }
+
         public override string ToString()
         {
             return $"Entity: {Type} {ID}";

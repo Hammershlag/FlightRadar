@@ -38,7 +38,7 @@ public class ObjectCountDisplay
     {
         while (stay)
         {
-            var objectListCount = DataStorage.Instance.Count();
+            var objectListCount = DataStorage.Instance.CountObjectList();
             lock (instanceLock)
             {
                 int previousLeft = Console.CursorLeft;

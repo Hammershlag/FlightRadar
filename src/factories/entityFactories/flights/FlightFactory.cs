@@ -42,10 +42,17 @@ namespace OOD_24L_01180689.src.factories.entityFactories.flights
             ulong id = BitConverter.ToUInt64(messageBytes, 7);
             ulong originID = BitConverter.ToUInt64(messageBytes, 15);
             ulong targetID = BitConverter.ToUInt64(messageBytes, 23);
-            string takeOffTime = DateTimeOffset.FromUnixTimeMilliseconds(BitConverter.ToInt64(messageBytes, 31))
-                .ToString("yyyy-MM-dd HH:mm:ss");
-            string landingTime = DateTimeOffset.FromUnixTimeMilliseconds(BitConverter.ToInt64(messageBytes, 39))
-                .ToString("yyyy-MM-dd HH:mm:ss");
+            DateTimeOffset takeOffTimeDate = DateTimeOffset.FromUnixTimeMilliseconds(BitConverter.ToInt64(messageBytes, 31));
+            DateTimeOffset landingTimeDate = DateTimeOffset.FromUnixTimeMilliseconds(BitConverter.ToInt64(messageBytes, 39));
+
+            // Check if landing time is before takeoff time and adjust
+            if (landingTimeDate < takeOffTimeDate)
+            {
+                landingTimeDate = landingTimeDate.AddDays(1);
+            }
+
+            string takeOffTime = takeOffTimeDate.ToString("yyyy-MM-dd HH:mm:ss");
+            string landingTime = landingTimeDate.ToString("yyyy-MM-dd HH:mm:ss");
             ulong planeID = BitConverter.ToUInt64(messageBytes, 47);
             ushort crewCount = BitConverter.ToUInt16(messageBytes, 55);
             ulong[] crewID = ParseByteArrayToUInt64Array(messageBytes, 57, crewCount);

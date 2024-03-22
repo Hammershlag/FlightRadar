@@ -10,6 +10,8 @@
         public float AMSL { get; protected set; }
         public string CountryISO { get; protected set; }
 
+        public Airport() : base("Wrong", UInt64.MaxValue) {}
+
         public Airport(string type, UInt64 id, string name, string code, float longitude, float latitude, float amsl,
             string countryISO) :
             base(type, id)

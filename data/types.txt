@@ -6,8 +6,19 @@ PassengerPlane - "PP"
 Airport - "AI"
 Flight - "FL"
 
+linear interpolation of flight pos (use timestamp and steps)
+long and lat and asml of flight become current position, so thats why we didnt have it in p2
+Think about a pattern as there is one expected to use connected with feeding data to gui
 
 
-Run() run it in the different thread or it will block the app and run it at the beggining (at the beginning initialize Network Simulator by loading dll)
-App should run constantly and waits for server until user tells it to stop. Don't worry about snapshot. When closing app remember to kill server thread. 
-Dont read data at the beggining from the file
+
+PP,1300,T21065,IND,EpsilonCruiser G280,2,10,25
+FL,1400,0,8,20:00,21:00,106.57,-35.89,9399,1300,[54;173;312;284;293],[28;38;34;30;35;24;24;38;28;30;32;27;25;32;36;29;36;29;35]
+PP,1301,T21015,IND,EpsilonCruiser G280,2,10,25
+FL,1401,0,7,20:00,21:00,106.57,-35.89,9399,1301,[54;173;312;284;293],[28;38;34;30;35;24;24;38;28;30;32;27;25;32;36;29;36;29;35]
+PP,1302,T21065,IND,EpsilonCruiser G280,2,10,25
+FL,1402,0,6,20:00,21:00,106.57,-35.89,9399,1302,[54;173;312;284;293],[28;38;34;30;35;24;24;38;28;30;32;27;25;32;36;29;36;29;35]
+PP,1303,T21015,IND,EpsilonCruiser G280,2,10,25
+FL,1403,0,5,20:00,21:00,106.57,-35.89,9399,1303,[54;173;312;284;293],[28;38;34;30;35;24;24;38;28;30;32;27;25;32;36;29;36;29;35]
+
+-- Add at the end to test if plane shows if its at the airport
