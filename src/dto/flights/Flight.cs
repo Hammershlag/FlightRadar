@@ -75,7 +75,7 @@ namespace OOD_24L_01180689.src.dto.flights
 
         public float CalculateRotation()
         {
-            var objectMap = DataStorage.Instance.GetIDEntityMap();
+            var objectMap = DataStorage.GetInstance.GetIDEntityMap();
 
             if (objectMap.TryGetValue(OriginID, out Entity originEntity) && originEntity is Airport sourceAirport &&
                 objectMap.TryGetValue(TargetID, out Entity targetEntity) && targetEntity is Airport targetAirport)
@@ -98,7 +98,7 @@ namespace OOD_24L_01180689.src.dto.flights
 
         public void UpdateFlightPosition()
         {
-            Dictionary<UInt64, Entity> objectMap = DataStorage.Instance.GetIDEntityMap();
+            Dictionary<UInt64, Entity> objectMap = DataStorage.GetInstance.GetIDEntityMap();
             if (inProgress && objectMap.TryGetValue(this.TargetID, out Entity target) && target is Airport targetAirport &&
                 objectMap.TryGetValue(this.OriginID, out Entity origin) && origin is Airport sourceAirport)
             {

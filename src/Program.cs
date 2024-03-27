@@ -7,6 +7,7 @@ using OOD_24L_01180689.src.factories.readers;
 using OOD_24L_01180689.src.factories.writersFactories;
 using OOD_24L_01180689.src.visualization;
 using OOD_24L_01180689.src.threads;
+using OOD_24L_01180689.src.console;
 
 class Program
 {
@@ -24,7 +25,7 @@ class Program
         var ss = ServerSimulator.GetInstance(input, minDelay, maxDelay);
         ss.Start();
 
-        var flightTrackerUpdater = new FlightTrackerUpdater();
+        var flightTrackerUpdater = FlightTrackerUpdater.GetInstance();
         flightTrackerUpdater.Start();
 
 
@@ -32,55 +33,14 @@ class Program
         IDataSource serverReader = fileReaderFactory.Create();
 
 
-
         IFileWriterFactory fileWriterFactory = new JSONWriterFactory();
         IWriter jsonWriter = fileWriterFactory.Create();
 
-
-
-        HandleConsoleInput(jsonWriter, dir, outputDir);
+        var consoleHandler = new ConsoleHandler(jsonWriter, dir, outputDir);
+        consoleHandler.HandleConsoleInput();
 
         ss.Stop();
         objectCountDisplay.Stop();
         flightTrackerUpdater.Stop();
-    }
-
-    private static void HandleConsoleInput(IWriter jsonWriter, string dir, string outputDir)
-    {
-        Console.WriteLine();
-        Console.WriteLine();
-        Console.WriteLine("Network source simulator started. ");
-        Console.WriteLine("Type 'exit' to quit, 'print' to serialize data, 'help' to display commands  or 'change' to change flight visibility");
-        string consoleInput = "";
-        while (true)
-        {
-            consoleInput = Console.ReadLine();
-            if (consoleInput.ToLower() == "exit")
-            {
-                break;
-            }
-            else if (consoleInput.ToLower() == "print")
-            {
-                var objectListCopy = DataStorage.Instance.GetObjectList();
-                string outputFilename = DateTime.Now.ToString("'snapshot_'HH_mm_ss'.json'");
-                jsonWriter.Write(objectListCopy, Path.Combine(dir, outputDir), outputFilename);
-                Console.WriteLine($"Serialized data written to file: {outputFilename}");
-            }
-            else if (consoleInput.ToLower() == "help")
-            {
-                Console.WriteLine($"Type: \n'exit' to quit" +
-                                  $"\n'print' to serialize data" +
-                                  $"\n'help' to display commands" + 
-                                  $"\n'change' to change flight visibility: 0 - all flight, 1 - all flights that are in progress, 2 - each plane should appear only once");
-            }
-            else if (consoleInput.ToLower() == "change")
-            {
-                Console.WriteLine("Change visibility to:");
-                consoleInput = Console.ReadLine();
-                int flag = int.Parse(consoleInput);
-                if(flag >= 0 && flag <= 2)
-                    FlightsGUIDataImplementation.flag = flag;
-            }
-        }
     }
 }

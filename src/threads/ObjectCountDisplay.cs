@@ -11,11 +11,9 @@ public class ObjectCountDisplay
     {
         countDisplayThread = new Thread(() =>
         {
-
             try
             {
                 DisplayObjectCount();
-
             }
             catch (ThreadInterruptedException ex)
             {
@@ -50,7 +48,7 @@ public class ObjectCountDisplay
     {
         while (stay)
         {
-            var objectListCount = DataStorage.Instance.CountObjectList();
+            var objectListCount = DataStorage.GetInstance.CountObjectList();
             lock (instanceLock)
             {
                 int previousLeft = Console.CursorLeft;

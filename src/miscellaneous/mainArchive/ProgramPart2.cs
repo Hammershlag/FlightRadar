@@ -4,7 +4,6 @@ using OOD_24L_01180689.src.dataStorage;
 using IDataSource = OOD_24L_01180689.src.readers.IDataSource;
 using OOD_24L_01180689.src.factories.readers;
 using OOD_24L_01180689.src.factories.writersFactories;
-using OOD_24L_01180689.src.visualization;
 
 class ProgramPart2
 {
@@ -51,7 +50,7 @@ class ProgramPart2
             }
             else if (consoleInput.ToLower() == "print")
             {
-                var objectListCopy = DataStorage.Instance.GetObjectList();
+                var objectListCopy = DataStorage.GetInstance.GetObjectList();
                 string outputFilename = DateTime.Now.ToString("'snapshot_'HH_mm_ss'.json'");
                 jsonWriter.Write(objectListCopy, Path.Combine(dir, outputDir), outputFilename);
                 Console.WriteLine($"Serialized data written to file: {outputFilename}");

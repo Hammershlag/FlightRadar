@@ -59,9 +59,6 @@ namespace OOD_24L_01180689.src.serverSimulator
 
         public void Stop()
         {
-            Thread.Sleep(1000);
-            //System.Environment.Exit(0);
-            Console.WriteLine("Test");
             try
             {
                 stopTask().Wait();

@@ -1,7 +1,4 @@
-﻿using FlightTrackerGUI;
-using OOD_24L_01180689.src.converters;
-using OOD_24L_01180689.src.dto;
-using OOD_24L_01180689.src.dto.airports;
+﻿using OOD_24L_01180689.src.dto;
 using OOD_24L_01180689.src.dto.flights;
 
 namespace OOD_24L_01180689.src.dataStorage
@@ -19,7 +16,7 @@ namespace OOD_24L_01180689.src.dataStorage
             objectList = new List<object>();
         }
 
-        public static DataStorage Instance
+        public static DataStorage GetInstance
         {
             get
             {
@@ -42,9 +39,9 @@ namespace OOD_24L_01180689.src.dataStorage
         {
             lock (lockObject)
             {
-                if(obj is Entity entity) 
+                if (obj is Entity entity)
                     iDEntityMap.Add(entity.getID(), entity);
-                if(obj is Flight flight)
+                if (obj is Flight flight)
                     flightList.Add(flight);
                 objectList.Add(obj);
             }
@@ -60,7 +57,7 @@ namespace OOD_24L_01180689.src.dataStorage
 
         public Dictionary<UInt64, Entity> GetIDEntityMap()
         {
-            lock(lockObject)
+            lock (lockObject)
             {
                 return new Dictionary<ulong, Entity>(iDEntityMap);
             }

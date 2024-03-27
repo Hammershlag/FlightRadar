@@ -43,7 +43,7 @@ namespace OOD_24L_01180689.src.readers
                     if (factoryMethods.TryGetValue(objectType, out var factoryMethod))
                     {
                         var obj = factoryMethod.Create(data);
-                        DataStorage.Instance.Add(obj);
+                        DataStorage.GetInstance.Add(obj);
                     }
                     else
                     {

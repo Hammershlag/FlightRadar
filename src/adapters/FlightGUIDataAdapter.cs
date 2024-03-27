@@ -1,36 +1,28 @@
-﻿using FlightTrackerGUI;
-using OOD_24L_01180689.src.dto.airports;
-using OOD_24L_01180689.src.dto.flights;
-using OOD_24L_01180689.src.dto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OOD_24L_01180689.src.dto.flights;
 using OOD_24L_01180689.src.dataStorage;
-using OOD_24L_01180689.src.converters;
 
 namespace OOD_24L_01180689.src.visualization
 {
     public class FlightsGUIDataImplementation : FlightsGUIData
     {
         private List<Flight> flightsData = new List<Flight>();
-        public static int flag = 2;
+        public static int displayFlightsFlag = 2;
 
         public void UpdateFlights()
         {
-            List<Flight> flightList = DataStorage.Instance.GetFlights();
+            List<Flight> flightList = DataStorage.GetInstance.GetFlights();
             List<Flight> flightGUIs = new List<Flight>();
-            if (flag == 0) //All flights appear
+            if (displayFlightsFlag == 0) //All flights appear
             {
                 foreach (var flight in flightList)
                 {
                     flight.UpdateFlightPosition();
                     flightGUIs.Add(flight);
                 }
-            } else if (flag == 1) //Only flights that are in progress appear
+            }
+            else if (displayFlightsFlag == 1) //Only flights that are in progress appear
             {
-                foreach(var flight in flightList)
+                foreach (var flight in flightList)
                 {
                     if (flight.inProgress)
                     {
@@ -38,9 +30,11 @@ namespace OOD_24L_01180689.src.visualization
                         flightGUIs.Add(flight);
                     }
                 }
-            } else if (flag == 2) //All planes apear at most one time (there are only 14 planes, so only 14 should be visible)
+            }
+            else if
+                (displayFlightsFlag ==
+                 2) //All planes apear at most one time (there are only 14 planes, so only 14 should be visible)
             {
-
                 Dictionary<ulong, Flight> closestToTakeoffFlights = new Dictionary<ulong, Flight>();
                 HashSet<ulong> processedPlanes = new HashSet<ulong>();
 
@@ -79,9 +73,8 @@ namespace OOD_24L_01180689.src.visualization
                         flightGUIs.Add(flight);
                     }
                 }
-
-                
             }
+
             flightsData = flightGUIs;
         }
 
@@ -125,7 +118,5 @@ namespace OOD_24L_01180689.src.visualization
                 return 0;
             }
         }
-
-        
     }
 }

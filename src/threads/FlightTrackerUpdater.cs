@@ -1,18 +1,18 @@
-﻿using System;
-using System.Threading;
-using FlightTrackerGUI;
-using OOD_24L_01180689.src.dataStorage;
+﻿using FlightTrackerGUI;
 using OOD_24L_01180689.src.visualization;
 
 namespace OOD_24L_01180689.src.threads
 {
     public class FlightTrackerUpdater
     {
+        private static FlightTrackerUpdater instance;
+        private static readonly object lockObject = new object();
+
         private Thread guiThread;
         private Thread updateThread;
         private volatile bool running = true;
 
-        public FlightTrackerUpdater()
+        private FlightTrackerUpdater()
         {
             guiThread = new Thread(InitializeGUI)
             {
@@ -22,6 +22,22 @@ namespace OOD_24L_01180689.src.threads
             {
                 IsBackground = true
             };
+        }
+
+        public static FlightTrackerUpdater GetInstance()
+        {
+            if (instance == null)
+            {
+                lock (lockObject)
+                {
+                    if (instance == null)
+                    {
+                        instance = new FlightTrackerUpdater();
+                    }
+                }
+            }
+
+            return instance;
         }
 
         private void InitializeGUI()
@@ -57,8 +73,11 @@ namespace OOD_24L_01180689.src.threads
 
         public void Start()
         {
-            guiThread.Start();
-            updateThread.Start();
+            if (!guiThread.IsAlive && !updateThread.IsAlive)
+            {
+                guiThread.Start();
+                updateThread.Start();
+            }
         }
 
         public void Stop()
@@ -68,6 +87,7 @@ namespace OOD_24L_01180689.src.threads
             {
                 guiThread.Interrupt();
             }
+
             if (updateThread.IsAlive)
             {
                 updateThread.Interrupt();
