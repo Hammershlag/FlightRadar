@@ -9,7 +9,19 @@ public class ObjectCountDisplay
 
     private ObjectCountDisplay()
     {
-        countDisplayThread = new Thread(DisplayObjectCount)
+        countDisplayThread = new Thread(() =>
+        {
+
+            try
+            {
+                DisplayObjectCount();
+
+            }
+            catch (ThreadInterruptedException ex)
+            {
+                Console.WriteLine("Object count interrupted");
+            }
+        })
         {
             IsBackground = true
         };
@@ -65,6 +77,7 @@ public class ObjectCountDisplay
         stay = false;
         if (countDisplayThread != null && countDisplayThread.IsAlive)
         {
+            countDisplayThread.Interrupt();
             countDisplayThread.Join();
         }
     }

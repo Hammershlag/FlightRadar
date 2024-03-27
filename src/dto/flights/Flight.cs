@@ -94,7 +94,9 @@ namespace OOD_24L_01180689.src.dto.flights
             return 0;
         }
 
-        public void UpdateFlightPosition(bool inProgress)
+        public bool inProgress => calculateTimePassed() > 0 && calculateTimePassed() < 1;
+
+        public void UpdateFlightPosition()
         {
             Dictionary<UInt64, Entity> objectMap = DataStorage.Instance.GetIDEntityMap();
             if (inProgress && objectMap.TryGetValue(this.TargetID, out Entity target) && target is Airport targetAirport &&
@@ -109,13 +111,22 @@ namespace OOD_24L_01180689.src.dto.flights
                 this.Latitude = sourceAirport.Latitude + deltaLatitude * time;
                 this.AMSL = sourceAirport.AMSL + deltaAMSL * time;
             }
-            else if (!inProgress)
+            else if (calculateTimePassed() == 0)
             {
                 if (objectMap.TryGetValue(this.OriginID, out Entity origin2) && origin2 is Airport sourceAirport2)
                 {
                     this.Longitude = sourceAirport2.Longitude;
                     this.Latitude = sourceAirport2.Latitude;
                     this.AMSL = sourceAirport2.AMSL;
+                }
+            }
+            else
+            {
+                if (objectMap.TryGetValue(this.TargetID, out Entity origin3) && origin3 is Airport sourceAirport3)
+                {
+                    this.Longitude = sourceAirport3.Longitude;
+                    this.Latitude = sourceAirport3.Latitude;
+                    this.AMSL = sourceAirport3.AMSL;
                 }
             }
         }

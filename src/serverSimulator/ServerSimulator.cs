@@ -11,7 +11,6 @@ namespace OOD_24L_01180689.src.serverSimulator
         private int maxDelay = 1;
         private string input = "";
         private NetworkSourceSimulator.NetworkSourceSimulator networkSourceInstance;
-        private Thread networkSourceThread;
 
         public event EventHandler<NewDataReadyArgs> OnDataReady;
 
@@ -35,29 +34,22 @@ namespace OOD_24L_01180689.src.serverSimulator
             return instance;
         }
 
-        public void Run()
+        public void Start()
         {
             networkSourceInstance = new NetworkSourceSimulator.NetworkSourceSimulator(input, minDelay, maxDelay);
             networkSourceInstance.OnNewDataReady += (sender, e) => { OnDataReady?.Invoke(this, e); };
-            networkSourceThread = StartNetworkSourceSimulator();
+            StartNetworkSourceSimulator();
         }
 
-        private Thread StartNetworkSourceSimulator()
+        private void StartNetworkSourceSimulator()
         {
-            Thread thread = new Thread(() =>
-            {
-                try
-                {
-                    networkSourceInstance.Run();
-                }
-                catch (ThreadInterruptedException ex)
-                {
-                    Console.WriteLine("Server Interrupted: " + ex.Message);
-                }
-            });
-            thread.Start();
+            Task.Run(networkSourceInstance.Run);
 
-            return thread;
+        }
+
+        private Task stopTask()
+        {
+            return Task.CompletedTask;
         }
 
         public Message GetMessageAt(int index)
@@ -67,13 +59,13 @@ namespace OOD_24L_01180689.src.serverSimulator
 
         public void Stop()
         {
+            Thread.Sleep(1000);
+            //System.Environment.Exit(0);
+            Console.WriteLine("Test");
             try
             {
-                if (networkSourceThread != null && networkSourceThread.IsAlive)
-                {
-                    networkSourceThread.Interrupt();
-                    networkSourceThread.Join();
-                }
+                stopTask().Wait();
+
             }
             catch
             {

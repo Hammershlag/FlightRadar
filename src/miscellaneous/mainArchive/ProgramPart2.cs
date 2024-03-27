@@ -24,7 +24,7 @@ class ProgramPart2
         IFileReaderFactory fileReaderFactory = new ServerReaderFactory(ss);
         IDataSource serverReader = fileReaderFactory.Create();
 
-        ss.Run();
+        ss.Start();
 
         IFileWriterFactory fileWriterFactory = new JSONWriterFactory();
         IWriter jsonWriter = fileWriterFactory.Create();
@@ -51,7 +51,6 @@ class ProgramPart2
             }
             else if (consoleInput.ToLower() == "print")
             {
-                FlightsGUIDataImplementation.updateFlights();
                 var objectListCopy = DataStorage.Instance.GetObjectList();
                 string outputFilename = DateTime.Now.ToString("'snapshot_'HH_mm_ss'.json'");
                 jsonWriter.Write(objectListCopy, Path.Combine(dir, outputDir), outputFilename);

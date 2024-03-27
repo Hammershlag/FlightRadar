@@ -6,6 +6,7 @@ using IDataSource = OOD_24L_01180689.src.readers.IDataSource;
 using OOD_24L_01180689.src.factories.readers;
 using OOD_24L_01180689.src.factories.writersFactories;
 using OOD_24L_01180689.src.visualization;
+using OOD_24L_01180689.src.threads;
 
 class Program
 {
@@ -20,40 +21,28 @@ class Program
         var objectCountDisplay = ObjectCountDisplay.GetInstance;
         objectCountDisplay.Start();
 
-        ServerSimulator ss = ServerSimulator.GetInstance(input, minDelay, maxDelay);
+        var ss = ServerSimulator.GetInstance(input, minDelay, maxDelay);
+        ss.Start();
+
+        var flightTrackerUpdater = new FlightTrackerUpdater();
+        flightTrackerUpdater.Start();
+
 
         IFileReaderFactory fileReaderFactory = new ServerReaderFactory(ss);
         IDataSource serverReader = fileReaderFactory.Create();
 
-        ss.Run();
-        Thread gui = new Thread(() => Runner.Run());
-        gui.Start();
-
-        int co = 1;
-        Thread updateThread = new Thread(() =>
-        {
-            while (true)
-            {
-                FlightsGUIDataImplementation.updateFlights();
-                Console.WriteLine("Updated " + co++);
-
-                //Thread.Sleep(TimeSpan.FromMinutes(1));
-                Thread.Sleep(TimeSpan.FromSeconds(1));
-                //Thread.Sleep(TimeSpan.FromMilliseconds(50));
-            }
-        });
-        updateThread.Start();
 
 
         IFileWriterFactory fileWriterFactory = new JSONWriterFactory();
         IWriter jsonWriter = fileWriterFactory.Create();
 
+
+
         HandleConsoleInput(jsonWriter, dir, outputDir);
 
         ss.Stop();
         objectCountDisplay.Stop();
-        gui.Abort();
-        updateThread.Abort();
+        flightTrackerUpdater.Stop();
     }
 
     private static void HandleConsoleInput(IWriter jsonWriter, string dir, string outputDir)
@@ -61,7 +50,7 @@ class Program
         Console.WriteLine();
         Console.WriteLine();
         Console.WriteLine("Network source simulator started. ");
-        Console.WriteLine("Type 'exit' to quit, 'print' to serialize data, 'help' to display commands");
+        Console.WriteLine("Type 'exit' to quit, 'print' to serialize data, 'help' to display commands  or 'change' to change flight visibility");
         string consoleInput = "";
         while (true)
         {
@@ -72,7 +61,6 @@ class Program
             }
             else if (consoleInput.ToLower() == "print")
             {
-                FlightsGUIDataImplementation.updateFlights();
                 var objectListCopy = DataStorage.Instance.GetObjectList();
                 string outputFilename = DateTime.Now.ToString("'snapshot_'HH_mm_ss'.json'");
                 jsonWriter.Write(objectListCopy, Path.Combine(dir, outputDir), outputFilename);
@@ -80,7 +68,18 @@ class Program
             }
             else if (consoleInput.ToLower() == "help")
             {
-                Console.WriteLine("Type 'exit' to quit, 'print' to serialize data, 'help' to display commands");
+                Console.WriteLine($"Type: \n'exit' to quit" +
+                                  $"\n'print' to serialize data" +
+                                  $"\n'help' to display commands" + 
+                                  $"\n'change' to change flight visibility: 0 - all flight, 1 - all flights that are in progress, 2 - each plane should appear only once");
+            }
+            else if (consoleInput.ToLower() == "change")
+            {
+                Console.WriteLine("Change visibility to:");
+                consoleInput = Console.ReadLine();
+                int flag = int.Parse(consoleInput);
+                if(flag >= 0 && flag <= 2)
+                    FlightsGUIDataImplementation.flag = flag;
             }
         }
     }

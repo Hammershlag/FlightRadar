@@ -14,60 +14,75 @@ namespace OOD_24L_01180689.src.visualization
 {
     public class FlightsGUIDataImplementation : FlightsGUIData
     {
-        private List<FlightGUI> flightsData;
+        private List<Flight> flightsData = new List<Flight>();
+        public static int flag = 2;
 
-        public FlightsGUIDataImplementation(List<FlightGUI> flightsData)
-        {
-            this.flightsData = flightsData;
-        }
-
-        public static void updateFlights()
+        public void UpdateFlights()
         {
             List<Flight> flightList = DataStorage.Instance.GetFlights();
-            List<FlightGUI> flightGUIs = new List<FlightGUI>();
-            Dictionary<ulong, Flight> closestToTakeoffFlights = new Dictionary<ulong, Flight>();
-            HashSet<ulong> processedPlanes = new HashSet<ulong>();
-
-            foreach (var flight in flightList)
+            List<Flight> flightGUIs = new List<Flight>();
+            if (flag == 0) //All flights appear
             {
-                float time = flight.calculateTimePassed();
-                bool isFlightInProgress = time > 0 && time < 1;
-                bool isFlightYetToStart = time <= 0;
-
-                if (isFlightInProgress)
+                foreach (var flight in flightList)
                 {
-                    if (!processedPlanes.Contains(flight.PlaneID))
+                    flight.UpdateFlightPosition();
+                    flightGUIs.Add(flight);
+                }
+            } else if (flag == 1) //Only flights that are in progress appear
+            {
+                foreach(var flight in flightList)
+                {
+                    if (flight.inProgress)
                     {
-                        processedPlanes.Add(flight.PlaneID);
-                        flight.UpdateFlightPosition(true);
-                        FlightGUI flightGUI = FlightToFlightGUIConverter.Convert(flight);
-                        flightGUIs.Add(flightGUI);
+                        flight.UpdateFlightPosition();
+                        flightGUIs.Add(flight);
                     }
                 }
-                else if (isFlightYetToStart && !processedPlanes.Contains(flight.PlaneID))
+            } else if (flag == 2) //All planes apear at most one time (there are only 14 planes, so only 14 should be visible)
+            {
+
+                Dictionary<ulong, Flight> closestToTakeoffFlights = new Dictionary<ulong, Flight>();
+                HashSet<ulong> processedPlanes = new HashSet<ulong>();
+
+                foreach (var flight in flightList)
                 {
-                    DateTime takeoffTime = DateTime.Parse(flight.TakeOffTime);
-                    if (!closestToTakeoffFlights.ContainsKey(flight.PlaneID) || DateTime.Parse(closestToTakeoffFlights[flight.PlaneID].TakeOffTime) > takeoffTime)
+                    float time = flight.calculateTimePassed();
+                    bool isFlightInProgress = flight.inProgress;
+                    bool isFlightYetToStart = time <= 0;
+
+                    if (isFlightInProgress)
                     {
-                        closestToTakeoffFlights[flight.PlaneID] = flight;
+                        if (!processedPlanes.Contains(flight.PlaneID))
+                        {
+                            processedPlanes.Add(flight.PlaneID);
+                            flight.UpdateFlightPosition();
+                            flightGUIs.Add(flight);
+                        }
+                    }
+                    else if (isFlightYetToStart && !processedPlanes.Contains(flight.PlaneID))
+                    {
+                        DateTime takeoffTime = DateTime.Parse(flight.TakeOffTime);
+                        if (!closestToTakeoffFlights.ContainsKey(flight.PlaneID) ||
+                            DateTime.Parse(closestToTakeoffFlights[flight.PlaneID].TakeOffTime) > takeoffTime)
+                        {
+                            closestToTakeoffFlights[flight.PlaneID] = flight;
+                        }
                     }
                 }
-            }
 
-            foreach (var entry in closestToTakeoffFlights)
-            {
-                if (!processedPlanes.Contains(entry.Key))
+                foreach (var entry in closestToTakeoffFlights)
                 {
-                    var flight = entry.Value;
-                    flight.UpdateFlightPosition(false);
-                    FlightGUI flightGUI = FlightToFlightGUIConverter.Convert(flight);
-                    flightGUIs.Add(flightGUI);
+                    if (!processedPlanes.Contains(entry.Key))
+                    {
+                        var flight = entry.Value;
+                        flight.UpdateFlightPosition();
+                        flightGUIs.Add(flight);
+                    }
                 }
+
+                
             }
-
-            FlightsGUIData flightsGUIData = new FlightsGUIDataImplementation(flightGUIs);
-            Runner.UpdateGUI(flightsGUIData);
-
+            flightsData = flightGUIs;
         }
 
         public override int GetFlightsCount()
@@ -91,7 +106,7 @@ namespace OOD_24L_01180689.src.visualization
         {
             if (index >= 0 && index < flightsData.Count)
             {
-                return flightsData[index].WorldPosition;
+                return new WorldPosition(flightsData[index].Latitude, flightsData[index].Longitude);
             }
             else
             {
@@ -103,12 +118,14 @@ namespace OOD_24L_01180689.src.visualization
         {
             if (index >= 0 && index < flightsData.Count)
             {
-                return flightsData[index].MapCoordRotation;
+                return flightsData[index].CalculateRotation();
             }
             else
             {
                 return 0;
             }
         }
+
+        
     }
 }
