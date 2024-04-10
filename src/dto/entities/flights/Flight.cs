@@ -1,7 +1,8 @@
 ﻿using OOD_24L_01180689.src.dataStorage;
-using OOD_24L_01180689.src.dto.airports;
+using OOD_24L_01180689.src.dto.entities;
+using OOD_24L_01180689.src.dto.entities.airports;
 
-namespace OOD_24L_01180689.src.dto.flights
+namespace OOD_24L_01180689.src.dto.entities.flights
 {
     public class Flight : Entity
     {
@@ -16,7 +17,7 @@ namespace OOD_24L_01180689.src.dto.flights
         public ulong[] CrewID { get; protected set; }
         public ulong[] LoadID { get; protected set; }
 
-        public Flight(string type, UInt64 id, ulong originID, ulong targetID, string takeOffTime, string landingTime,
+        public Flight(string type, ulong id, ulong originID, ulong targetID, string takeOffTime, string landingTime,
             float longitude, float latitude, float amsl, ulong planeID, ulong[] crewID, ulong[] loadID) :
             base(type, id)
         {
@@ -100,39 +101,39 @@ namespace OOD_24L_01180689.src.dto.flights
 
         public void UpdateFlightPosition()
         {
-            Dictionary<UInt64, Entity> objectMap = DataStorage.GetInstance.GetIDEntityMap();
-            if (inProgress && objectMap.TryGetValue(this.TargetID, out Entity target) &&
-                objectMap.TryGetValue(this.OriginID, out Entity origin))
+            Dictionary<ulong, Entity> objectMap = DataStorage.GetInstance.GetIDEntityMap();
+            if (inProgress && objectMap.TryGetValue(TargetID, out Entity target) &&
+                objectMap.TryGetValue(OriginID, out Entity origin))
             {
                 Airport targetAirport = target as Airport;
                 Airport sourceAirport = origin as Airport;
                 float deltaLongitude = targetAirport.Longitude - sourceAirport.Longitude;
                 float deltaLatitude = targetAirport.Latitude - sourceAirport.Latitude;
                 float deltaAMSL = targetAirport.AMSL - sourceAirport.AMSL;
-                float time = this.calculateTimePassed();
+                float time = calculateTimePassed();
 
-                this.Longitude = sourceAirport.Longitude + deltaLongitude * time;
-                this.Latitude = sourceAirport.Latitude + deltaLatitude * time;
-                this.AMSL = sourceAirport.AMSL + deltaAMSL * time;
+                Longitude = sourceAirport.Longitude + deltaLongitude * time;
+                Latitude = sourceAirport.Latitude + deltaLatitude * time;
+                AMSL = sourceAirport.AMSL + deltaAMSL * time;
             }
             else if (calculateTimePassed() == 0)
             {
-                if (objectMap.TryGetValue(this.OriginID, out Entity origin2))
+                if (objectMap.TryGetValue(OriginID, out Entity origin2))
                 {
                     Airport sourceAirport2 = origin2 as Airport;
-                    this.Longitude = sourceAirport2.Longitude;
-                    this.Latitude = sourceAirport2.Latitude;
-                    this.AMSL = sourceAirport2.AMSL;
+                    Longitude = sourceAirport2.Longitude;
+                    Latitude = sourceAirport2.Latitude;
+                    AMSL = sourceAirport2.AMSL;
                 }
             }
             else
             {
-                if (objectMap.TryGetValue(this.TargetID, out Entity origin3))
+                if (objectMap.TryGetValue(TargetID, out Entity origin3))
                 {
                     Airport sourceAirport3 = origin3 as Airport;
-                    this.Longitude = sourceAirport3.Longitude;
-                    this.Latitude = sourceAirport3.Latitude;
-                    this.AMSL = sourceAirport3.AMSL;
+                    Longitude = sourceAirport3.Longitude;
+                    Latitude = sourceAirport3.Latitude;
+                    AMSL = sourceAirport3.AMSL;
                 }
             }
         }

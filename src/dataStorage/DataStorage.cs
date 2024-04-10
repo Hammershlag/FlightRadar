@@ -1,6 +1,7 @@
-﻿using OOD_24L_01180689.src.dto;
-using OOD_24L_01180689.src.dto.flights;
-using OOD_24L_01180689.src.reports;
+﻿using OOD_24L_01180689.src.dto.entities;
+using OOD_24L_01180689.src.dto.entities.flights;
+using OOD_24L_01180689.src.dto.reports.reporters;
+using OOD_24L_01180689.src.dto.reports.reporters.reporters;
 
 namespace OOD_24L_01180689.src.dataStorage
 {

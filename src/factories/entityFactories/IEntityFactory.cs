@@ -1,5 +1,5 @@
 ﻿using NetworkSourceSimulator;
-using OOD_24L_01180689.src.dto;
+using OOD_24L_01180689.src.dto.entities;
 
 namespace OOD_24L_01180689.src.factories.entityFactories
 {

@@ -1,5 +1,5 @@
 ﻿using NetworkSourceSimulator;
-using OOD_24L_01180689.src.dto.cargo;
+using OOD_24L_01180689.src.dto.entities.cargo;
 using System.Globalization;
 using System.Text;
 

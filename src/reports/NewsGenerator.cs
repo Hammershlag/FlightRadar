@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using OOD_24L_01180689.src.dto.reports.reporters;
+using OOD_24L_01180689.src.dto.reports.reporters.reporters;
 
 namespace OOD_24L_01180689.src.reports
 {

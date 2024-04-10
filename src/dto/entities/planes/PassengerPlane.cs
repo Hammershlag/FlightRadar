@@ -1,15 +1,15 @@
-﻿using OOD_24L_01180689.src.reports;
+﻿using OOD_24L_01180689.src.dto.reports.reporters;
 
-namespace OOD_24L_01180689.src.dto.planes
+namespace OOD_24L_01180689.src.dto.entities.planes
 {
     public class PassengerPlane : Plane, IReportable
     {
-        public UInt16 FirstClassSize { get; protected set; }
-        public UInt16 BusinessClassSize { get; protected set; }
-        public UInt16 EconomyClassSize { get; protected set; }
+        public ushort FirstClassSize { get; protected set; }
+        public ushort BusinessClassSize { get; protected set; }
+        public ushort EconomyClassSize { get; protected set; }
 
-        public PassengerPlane(string type, UInt64 id, string serial, string countryISO, string model,
-            UInt16 firstClassSize, UInt16 businessClassSize, UInt16 economyClassSize) :
+        public PassengerPlane(string type, ulong id, string serial, string countryISO, string model,
+            ushort firstClassSize, ushort businessClassSize, ushort economyClassSize) :
             base(type, id, serial, countryISO, model)
         {
             FirstClassSize = firstClassSize;

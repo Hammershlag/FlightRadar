@@ -1,17 +1,17 @@
-﻿namespace OOD_24L_01180689.src.dto
+﻿namespace OOD_24L_01180689.src.dto.entities
 {
     public abstract class Entity
     {
         public string Type { get; protected set; }
-        public UInt64 ID { get; protected set; }
+        public ulong ID { get; protected set; }
 
-        protected Entity(string type, UInt64 ID)
+        protected Entity(string type, ulong ID)
         {
             this.ID = ID;
             Type = type;
         }
 
-        public UInt64 getID()
+        public ulong getID()
         {
             return ID;
         }

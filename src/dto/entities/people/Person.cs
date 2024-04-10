@@ -1,13 +1,15 @@
-﻿namespace OOD_24L_01180689.src.dto.people
+﻿using OOD_24L_01180689.src.dto.entities;
+
+namespace OOD_24L_01180689.src.dto.entities.people
 {
     public abstract class Person : Entity
     {
         public string Name { get; protected set; }
-        public UInt64 Age { get; protected set; }
+        public ulong Age { get; protected set; }
         public string Phone { get; protected set; }
         public string Email { get; protected set; }
 
-        protected Person(string type, UInt64 id, string name, UInt64 age, string phone, string email) :
+        protected Person(string type, ulong id, string name, ulong age, string phone, string email) :
             base(type, id)
         {
             Name = name;

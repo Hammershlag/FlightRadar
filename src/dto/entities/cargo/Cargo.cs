@@ -1,4 +1,4 @@
-﻿namespace OOD_24L_01180689.src.dto.cargo
+﻿namespace OOD_24L_01180689.src.dto.entities.cargo
 {
     public class Cargo : Entity
     {
@@ -6,7 +6,7 @@
         public string Code { get; protected set; }
         public string Description { get; protected set; }
 
-        public Cargo(string type, UInt64 id, float weight, string code, string description) :
+        public Cargo(string type, ulong id, float weight, string code, string description) :
             base(type, id)
         {
             Weight = weight;

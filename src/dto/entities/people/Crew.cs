@@ -1,11 +1,11 @@
-﻿namespace OOD_24L_01180689.src.dto.people
+﻿namespace OOD_24L_01180689.src.dto.entities.people
 {
     public class Crew : Person
     {
-        public UInt16 Practice { get; protected set; }
+        public ushort Practice { get; protected set; }
         public string Role { get; protected set; }
 
-        public Crew(string type, UInt64 id, string name, ulong age, string phone, string email, UInt16 practice,
+        public Crew(string type, ulong id, string name, ulong age, string phone, string email, ushort practice,
             string role) :
             base(type, id, name, age, phone, email)
         {

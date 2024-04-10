@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using OOD_24L_01180689.src.dto.airports;
-using OOD_24L_01180689.src.dto.planes;
+using OOD_24L_01180689.src.dto.entities.airports;
+using OOD_24L_01180689.src.dto.entities.planes;
 
-namespace OOD_24L_01180689.src.reports.reporters
+namespace OOD_24L_01180689.src.dto.reports.reporters.reporters
 {
     public class Television : NewsProvider, INewsVisitor
     {

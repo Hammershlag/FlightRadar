@@ -1,5 +1,5 @@
 ﻿using NetworkSourceSimulator;
-using OOD_24L_01180689.src.dto.people;
+using OOD_24L_01180689.src.dto.entities.people;
 using System.Text;
 
 namespace OOD_24L_01180689.src.factories.entityFactories.people

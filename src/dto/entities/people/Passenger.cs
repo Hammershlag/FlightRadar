@@ -1,11 +1,11 @@
-﻿namespace OOD_24L_01180689.src.dto.people
+﻿namespace OOD_24L_01180689.src.dto.entities.people
 {
     public class Passenger : Person
     {
         public string Class { get; protected set; }
         public ulong Miles { get; protected set; }
 
-        public Passenger(string type, UInt64 id, string name, ulong age, string phone, string email, string _class,
+        public Passenger(string type, ulong id, string name, ulong age, string phone, string email, string _class,
             ulong miles) :
             base(type, id, name, age, phone, email)
         {

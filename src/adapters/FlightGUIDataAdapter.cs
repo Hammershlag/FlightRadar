@@ -1,5 +1,5 @@
-﻿using OOD_24L_01180689.src.dto.flights;
-using OOD_24L_01180689.src.dataStorage;
+﻿using OOD_24L_01180689.src.dataStorage;
+using OOD_24L_01180689.src.dto.entities.flights;
 
 namespace OOD_24L_01180689.src.visualization
 {

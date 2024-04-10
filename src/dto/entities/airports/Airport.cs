@@ -1,6 +1,6 @@
-﻿using OOD_24L_01180689.src.reports;
+﻿using OOD_24L_01180689.src.dto.reports.reporters;
 
-namespace OOD_24L_01180689.src.dto.airports
+namespace OOD_24L_01180689.src.dto.entities.airports
 {
     public class Airport : Entity, IReportable
     {
@@ -11,11 +11,11 @@ namespace OOD_24L_01180689.src.dto.airports
         public float AMSL { get; protected set; }
         public string CountryISO { get; protected set; }
 
-        public Airport() : base("Wrong", UInt64.MaxValue)
+        public Airport() : base("Wrong", ulong.MaxValue)
         {
         }
 
-        public Airport(string type, UInt64 id, string name, string code, float longitude, float latitude, float amsl,
+        public Airport(string type, ulong id, string name, string code, float longitude, float latitude, float amsl,
             string countryISO) :
             base(type, id)
         {
