@@ -16,8 +16,8 @@ class Program
         string dir = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..");
         string input = Path.Combine(dir, "data", "example1.ftr");
         string outputDir = "data";
-        int minDelay = 1000;
-        int maxDelay = 3000;
+        int minDelay = 0;
+        int maxDelay = 0;
 
         Console.Clear();
 

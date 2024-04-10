@@ -10,5 +10,7 @@ namespace OOD_24L_01180689.src.reports
     {
         bool HasNext();
         T Next();
+
+        void Reset();
     }
 }

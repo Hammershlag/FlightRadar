@@ -32,5 +32,11 @@ namespace OOD_24L_01180689.src.reports
 
             return news;
         }
+
+        public void Reset()
+        {
+            providerIndex = 0;
+            reporterIndex = 0;
+        }
     }
 }
