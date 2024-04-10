@@ -1,6 +1,8 @@
-﻿namespace OOD_24L_01180689.src.dto.planes
+﻿using OOD_24L_01180689.src.reports;
+
+namespace OOD_24L_01180689.src.dto.planes
 {
-    public class PassengerPlane : Plane
+    public class PassengerPlane : Plane, IReportable
     {
         public UInt16 FirstClassSize { get; protected set; }
         public UInt16 BusinessClassSize { get; protected set; }
@@ -19,6 +21,11 @@
         {
             return
                 $"PassengerPlane: {Type} {ID} {Serial} {CountryISO} {Model} {FirstClassSize} {BusinessClassSize} {EconomyClassSize}";
+        }
+
+        public void Accept(INewsVisitor visitor)
+        {
+            visitor.Visit(this);
         }
     }
 }

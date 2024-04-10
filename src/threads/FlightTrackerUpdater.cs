@@ -54,7 +54,7 @@ namespace OOD_24L_01180689.src.threads
 
         private void UpdateDataLoop()
         {
-            var flightsGUIData = new FlightsGUIDataImplementation();
+            var flightsGUIData = new FlightsGUIDataAdapter();
 
             while (running)
             {

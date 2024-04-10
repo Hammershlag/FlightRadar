@@ -5,39 +5,25 @@ using OOD_24L_01180689.src.factories.readers;
 using OOD_24L_01180689.src.factories.writersFactories;
 using OOD_24L_01180689.src.threads;
 using OOD_24L_01180689.src.console;
-using OOD_24L_01180689.src.dataStorage;
-using OOD_24L_01180689.src.reports;
-using OOD_24L_01180689.src.reports.reporters;
 
-class Program
+class ProgramPart3
 {
-    static void Main(string[] args)
+    static void Main3(string[] args)
     {
         string dir = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..");
         string input = Path.Combine(dir, "data", "example1.ftr");
         string outputDir = "data";
-        int minDelay = 1000;
-        int maxDelay = 3000;
+        int minDelay = 0;
+        int maxDelay = 0;
 
-        Console.Clear();
+        var objectCountDisplay = ObjectCountDisplay.GetInstance;
+        objectCountDisplay.Start();
 
         var ss = ServerSimulator.GetInstance(input, minDelay, maxDelay);
         ss.Start();
 
         var flightTrackerUpdater = FlightTrackerUpdater.GetInstance();
         flightTrackerUpdater.Start();
-
-        DataStorage.GetInstance.addNewsProvider(new Television("Abelian Television"));
-        DataStorage.GetInstance.addNewsProvider(new Television("Channel TV-Tensor"));
-
-        DataStorage.GetInstance.addNewsProvider(new Radio("Quantifier radio"));
-        DataStorage.GetInstance.addNewsProvider(new Radio("Shmem radio"));
-
-        DataStorage.GetInstance.addNewsProvider(new Newspaper("Categories Journal"));
-        DataStorage.GetInstance.addNewsProvider(new Newspaper("Polytechnical Gazette"));
-
-        NewsGenerator newsGenerator = new NewsGenerator(DataStorage.GetInstance.GetNewsProviders(),
-            DataStorage.GetInstance.GetReporters());
 
 
         IFileReaderFactory fileReaderFactory = new ServerReaderFactory(ss);
@@ -47,10 +33,11 @@ class Program
         IFileWriterFactory fileWriterFactory = new JSONWriterFactory();
         IWriter jsonWriter = fileWriterFactory.Create();
 
-        var consoleHandler = new ConsoleHandler(jsonWriter, dir, outputDir, newsGenerator);
+        var consoleHandler = new ConsoleHandler(jsonWriter, dir, outputDir);
         consoleHandler.HandleConsoleInput();
 
         ss.Stop();
+        objectCountDisplay.Stop();
         flightTrackerUpdater.Stop();
     }
 }

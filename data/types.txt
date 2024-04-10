@@ -22,3 +22,8 @@ PP,1303,T21015,IND,EpsilonCruiser G280,2,10,25
 FL,1403,0,5,20:00,21:00,106.57,-35.89,9399,1303,[54;173;312;284;293],[28;38;34;30;35;24;24;38;28;30;32;27;25;32;36;29;36;29;35]
 
 -- Add at the end to test if plane shows if its at the airport
+
+
+Part 4
+
+cannot use 'type' or check if obj is of some type. Suggested to use ood patterns: visitor and iterator

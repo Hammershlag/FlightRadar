@@ -3,7 +3,7 @@ using OOD_24L_01180689.src.dataStorage;
 
 namespace OOD_24L_01180689.src.visualization
 {
-    public class FlightsGUIDataImplementation : FlightsGUIData
+    public class FlightsGUIDataAdapter : FlightsGUIData
     {
         private List<Flight> flightsData = new List<Flight>();
         public static int displayFlightsFlag = 2;

@@ -1,4 +1,5 @@
 ﻿using OOD_24L_01180689.src.dataStorage;
+using OOD_24L_01180689.src.reports;
 using OOD_24L_01180689.src.visualization;
 using OOD_24L_01180689.src.writers;
 
@@ -9,6 +10,15 @@ namespace OOD_24L_01180689.src.console
         private readonly IWriter jsonWriter;
         private readonly string dir;
         private readonly string outputDir;
+        private NewsGenerator newsGenerator;
+
+        public ConsoleHandler(IWriter jsonWriter, string dir, string outputDir, NewsGenerator newsGenerator)
+        {
+            this.jsonWriter = jsonWriter;
+            this.dir = dir;
+            this.outputDir = outputDir;
+            this.newsGenerator = newsGenerator;
+        }
 
         public ConsoleHandler(IWriter jsonWriter, string dir, string outputDir)
         {
@@ -22,7 +32,7 @@ namespace OOD_24L_01180689.src.console
             Console.WriteLine();
             Console.WriteLine("Network source simulator started.");
             Console.WriteLine(
-                "Type 'exit' to quit, 'print' to serialize data, 'help' to display commands, or 'change' to change flight visibility.");
+                "Type 'exit' to quit or 'help' to display commands.");
             while (true)
             {
                 string consoleInput = Console.ReadLine();
@@ -38,6 +48,9 @@ namespace OOD_24L_01180689.src.console
                         break;
                     case "change":
                         ChangeVisibility();
+                        break;
+                    case "report":
+                        Report();
                         break;
                 }
             }
@@ -56,7 +69,8 @@ namespace OOD_24L_01180689.src.console
             Console.WriteLine($"Type: \n'exit' to quit" +
                               $"\n'print' to serialize data" +
                               $"\n'help' to display commands" +
-                              $"\n'change' to change flight visibility: 0 - all flights, 1 - all flights that are in progress, 2 - each plane should appear only once");
+                              $"\n'change' to change flight visibility: 0 - all flights, 1 - all flights that are in progress, 2 - each plane should appear only once" +
+                              $"\n'report to report all data that can be reported");
         }
 
         private void ChangeVisibility()
@@ -65,12 +79,30 @@ namespace OOD_24L_01180689.src.console
             string input = Console.ReadLine();
             if (int.TryParse(input, out int flag) && flag >= 0 && flag <= 2)
             {
-                FlightsGUIDataImplementation.displayFlightsFlag = flag;
+                FlightsGUIDataAdapter.displayFlightsFlag = flag;
             }
             else
             {
                 Console.WriteLine("Invalid input. Please enter a number between 0 and 2.");
             }
+        }
+
+        private void Report()
+        {
+            newsGenerator = new NewsGenerator(DataStorage.GetInstance.GetNewsProviders(),
+                DataStorage.GetInstance.GetReporters());
+
+            Console.WriteLine("\n-------");
+            Console.WriteLine("REPORTS");
+            Console.WriteLine("-------\n");
+            while (newsGenerator.HasNext())
+            {
+                Console.WriteLine(newsGenerator.Next());
+            }
+
+            Console.WriteLine("\n--------------");
+            Console.WriteLine("End of reports");
+            Console.WriteLine("--------------\n");
         }
     }
 }

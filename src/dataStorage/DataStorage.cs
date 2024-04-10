@@ -1,5 +1,6 @@
 ﻿using OOD_24L_01180689.src.dto;
 using OOD_24L_01180689.src.dto.flights;
+using OOD_24L_01180689.src.reports;
 
 namespace OOD_24L_01180689.src.dataStorage
 {
@@ -10,6 +11,8 @@ namespace OOD_24L_01180689.src.dataStorage
         private List<object> objectList;
         private Dictionary<UInt64, Entity> iDEntityMap = new Dictionary<ulong, Entity>();
         private List<Flight> flightList = new List<Flight>();
+        private List<NewsProvider> providers = new List<NewsProvider>();
+        private List<IReportable> reporters = new List<IReportable>();
 
         private DataStorage()
         {
@@ -35,15 +38,41 @@ namespace OOD_24L_01180689.src.dataStorage
             }
         }
 
+        public void addNewsProvider(NewsProvider provider)
+        {
+            lock (lockObject)
+            {
+                providers.Add(provider);
+            }
+        }
+
         public void Add(object obj)
         {
             lock (lockObject)
             {
-                if (obj is Entity entity)
-                    iDEntityMap.Add(entity.getID(), entity);
-                if (obj is Flight flight)
-                    flightList.Add(flight);
+                if (obj as Entity != null)
+                    iDEntityMap.Add(((Entity)obj).getID(), (Entity)obj);
+                if (obj as Flight != null)
+                    flightList.Add((Flight)obj);
+                if (obj as IReportable != null)
+                    reporters.Add((IReportable)obj);
                 objectList.Add(obj);
+            }
+        }
+
+        public List<NewsProvider> GetNewsProviders()
+        {
+            lock (lockObject)
+            {
+                return new List<NewsProvider>(providers);
+            }
+        }
+
+        public List<IReportable> GetReporters()
+        {
+            lock (lockObject)
+            {
+                return new List<IReportable>(reporters);
             }
         }
 

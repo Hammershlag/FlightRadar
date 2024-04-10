@@ -77,9 +77,11 @@ namespace OOD_24L_01180689.src.dto.flights
         {
             var objectMap = DataStorage.GetInstance.GetIDEntityMap();
 
-            if (objectMap.TryGetValue(OriginID, out Entity originEntity) && originEntity is Airport sourceAirport &&
-                objectMap.TryGetValue(TargetID, out Entity targetEntity) && targetEntity is Airport targetAirport)
+            if (objectMap.TryGetValue(OriginID, out Entity originEntity) &&
+                objectMap.TryGetValue(TargetID, out Entity targetEntity))
             {
+                Airport sourceAirport = originEntity as Airport;
+                Airport targetAirport = targetEntity as Airport;
                 float deltaLongitude = targetAirport.Longitude - sourceAirport.Longitude;
                 float deltaLatitude = targetAirport.Latitude - sourceAirport.Latitude;
 
@@ -99,9 +101,11 @@ namespace OOD_24L_01180689.src.dto.flights
         public void UpdateFlightPosition()
         {
             Dictionary<UInt64, Entity> objectMap = DataStorage.GetInstance.GetIDEntityMap();
-            if (inProgress && objectMap.TryGetValue(this.TargetID, out Entity target) && target is Airport targetAirport &&
-                objectMap.TryGetValue(this.OriginID, out Entity origin) && origin is Airport sourceAirport)
+            if (inProgress && objectMap.TryGetValue(this.TargetID, out Entity target) &&
+                objectMap.TryGetValue(this.OriginID, out Entity origin))
             {
+                Airport targetAirport = target as Airport;
+                Airport sourceAirport = origin as Airport;
                 float deltaLongitude = targetAirport.Longitude - sourceAirport.Longitude;
                 float deltaLatitude = targetAirport.Latitude - sourceAirport.Latitude;
                 float deltaAMSL = targetAirport.AMSL - sourceAirport.AMSL;
@@ -113,8 +117,9 @@ namespace OOD_24L_01180689.src.dto.flights
             }
             else if (calculateTimePassed() == 0)
             {
-                if (objectMap.TryGetValue(this.OriginID, out Entity origin2) && origin2 is Airport sourceAirport2)
+                if (objectMap.TryGetValue(this.OriginID, out Entity origin2))
                 {
+                    Airport sourceAirport2 = origin2 as Airport;
                     this.Longitude = sourceAirport2.Longitude;
                     this.Latitude = sourceAirport2.Latitude;
                     this.AMSL = sourceAirport2.AMSL;
@@ -122,8 +127,9 @@ namespace OOD_24L_01180689.src.dto.flights
             }
             else
             {
-                if (objectMap.TryGetValue(this.TargetID, out Entity origin3) && origin3 is Airport sourceAirport3)
+                if (objectMap.TryGetValue(this.TargetID, out Entity origin3))
                 {
+                    Airport sourceAirport3 = origin3 as Airport;
                     this.Longitude = sourceAirport3.Longitude;
                     this.Latitude = sourceAirport3.Latitude;
                     this.AMSL = sourceAirport3.AMSL;
