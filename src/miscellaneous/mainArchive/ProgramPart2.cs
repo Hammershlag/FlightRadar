@@ -10,7 +10,7 @@ class ProgramPart2
     static void Main2(string[] args)
     {
         string dir = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..");
-        string input = Path.Combine(dir, "data", "example1.ftr");
+        string input = Path.Combine(dir, "data", "input_example.ftr");
         string outputDir = "data";
         int minDelay = 1;
         int maxDelay = 1;

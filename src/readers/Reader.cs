@@ -2,7 +2,7 @@
 {
     public class Reader : IDataSource
     {
-        public virtual void ReadData(string dir, string filename)
+        public virtual void ReadData(string filename)
         {
             throw new NotImplementedException();
         }

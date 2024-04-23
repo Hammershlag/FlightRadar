@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <AvaloniaXaml Remove="FakesAssemblies\**" />
+    <Compile Remove="FakesAssemblies\**" />
+    <EmbeddedResource Remove="FakesAssemblies\**" />
+    <None Remove="FakesAssemblies\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FlightTrackerGUI" Version="1.0.0" />
   </ItemGroup>
 
@@ -15,6 +22,11 @@
     <Reference Include="NetworkSourceSimulator">
       <HintPath>libs\networkSource\NetworkSourceSimulator.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <AdditionalDesignTimeBuildInput Remove="FakesAssemblies\**" />
   </ItemGroup>
 
 </Project>

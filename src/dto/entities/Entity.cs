@@ -3,7 +3,7 @@
     public abstract class Entity
     {
         public string Type { get; protected set; }
-        public ulong ID { get; protected set; }
+        public ulong ID { get; set; }
 
         protected Entity(string type, ulong ID)
         {

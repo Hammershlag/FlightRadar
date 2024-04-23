@@ -27,6 +27,8 @@ namespace OOD_24L_01180689.src.readers
 
         public ServerReader(ServerSimulator serverSimulator)
         {
+            Console.WriteLine();
+            Console.WriteLine("Network source simulator started.");
             serverSimulator.OnDataReady += HandleNewDataReady;
         }
 

@@ -9,7 +9,7 @@ class ProgramPart1
     static void Main1(string[] args)
     {
         string dir = Directory.GetCurrentDirectory() + "..\\..\\..\\..";
-        string input = "data\\example1.ftr";
+        string input = "data\\input_example.ftr";
         string output = "data\\output.json";
 
         DataStorage ds = DataStorage.GetInstance;
@@ -18,7 +18,7 @@ class ProgramPart1
         IFileReaderFactory fileFactory = new FTRReaderFactory();
         IDataSource dataSource = fileFactory.Create();
 
-        dataSource.ReadData(dir, input);
+        dataSource.ReadData(Path.Combine(dir, input));
 
         Console.WriteLine($"Deserialized data from file: {input}");
 

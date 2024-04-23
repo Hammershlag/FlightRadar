@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using OOD_24L_01180689.src.dataStorage;
 using OOD_24L_01180689.src.dto.reports.reporters;
 using OOD_24L_01180689.src.dto.reports.reporters.reporters;
 
@@ -39,6 +40,18 @@ namespace OOD_24L_01180689.src.reports
         {
             providerIndex = 0;
             reporterIndex = 0;
+        }
+
+        public static void InitializeProviders()
+        {
+            DataStorage.GetInstance.addNewsProvider(new Television("Abelian Television"));
+            DataStorage.GetInstance.addNewsProvider(new Television("Channel TV-Tensor"));
+
+            DataStorage.GetInstance.addNewsProvider(new Radio("Quantifier radio"));
+            DataStorage.GetInstance.addNewsProvider(new Radio("Shmem radio"));
+
+            DataStorage.GetInstance.addNewsProvider(new Newspaper("Categories Journal"));
+            DataStorage.GetInstance.addNewsProvider(new Newspaper("Polytechnical Gazette"));
         }
     }
 }

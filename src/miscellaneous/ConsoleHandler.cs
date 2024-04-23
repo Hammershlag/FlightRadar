@@ -29,8 +29,6 @@ namespace OOD_24L_01180689.src.console
 
         public void HandleConsoleInput()
         {
-            Console.WriteLine();
-            Console.WriteLine("Network source simulator started.");
             Console.WriteLine(
                 "Type 'exit' to quit or 'help' to display commands.");
             while (true)

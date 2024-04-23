@@ -17,6 +17,8 @@ namespace OOD_24L_01180689.src.dto.entities.flights
         public ulong[] CrewID { get; protected set; }
         public ulong[] LoadID { get; protected set; }
 
+        private DateTime lastUpdate;
+
         public Flight(string type, ulong id, ulong originID, ulong targetID, string takeOffTime, string landingTime,
             float longitude, float latitude, float amsl, ulong planeID, ulong[] crewID, ulong[] loadID) :
             base(type, id)
@@ -31,7 +33,11 @@ namespace OOD_24L_01180689.src.dto.entities.flights
             PlaneID = planeID;
             CrewID = crewID;
             LoadID = loadID;
+
+            lastUpdate = DateTime.Now;
         }
+
+
 
         public override string ToString()
         {
@@ -77,17 +83,15 @@ namespace OOD_24L_01180689.src.dto.entities.flights
         public float CalculateRotation()
         {
             var objectMap = DataStorage.GetInstance.GetIDEntityMap();
-
-            if (objectMap.TryGetValue(OriginID, out Entity originEntity) &&
-                objectMap.TryGetValue(TargetID, out Entity targetEntity))
+            if (objectMap.TryGetValue(TargetID, out Entity targetEntity))
             {
-                Airport sourceAirport = originEntity as Airport;
                 Airport targetAirport = targetEntity as Airport;
-                float deltaLongitude = targetAirport.Longitude - sourceAirport.Longitude;
-                float deltaLatitude = targetAirport.Latitude - sourceAirport.Latitude;
 
+                float deltaLongitude = targetAirport.Longitude - Longitude;
+                float deltaLatitude = targetAirport.Latitude - Latitude;
+
+                // Compute the  angle
                 float rotation = (float)Math.Atan2(deltaLongitude, deltaLatitude);
-
 
                 if (rotation < 0) rotation += 2 * (float)Math.PI;
 
@@ -97,24 +101,28 @@ namespace OOD_24L_01180689.src.dto.entities.flights
             return 0;
         }
 
+
         public bool inProgress => calculateTimePassed() > 0 && calculateTimePassed() < 1;
 
         public void UpdateFlightPosition()
         {
             Dictionary<ulong, Entity> objectMap = DataStorage.GetInstance.GetIDEntityMap();
-            if (inProgress && objectMap.TryGetValue(TargetID, out Entity target) &&
-                objectMap.TryGetValue(OriginID, out Entity origin))
+            DateTime currentTime = DateTime.Now;
+
+            TimeSpan elapsedTime = currentTime - lastUpdate;
+            lastUpdate = currentTime;
+
+            if (inProgress && DataStorage.GetInstance.GetIDEntityMap().TryGetValue(TargetID, out Entity target))
             {
                 Airport targetAirport = target as Airport;
-                Airport sourceAirport = origin as Airport;
-                float deltaLongitude = targetAirport.Longitude - sourceAirport.Longitude;
-                float deltaLatitude = targetAirport.Latitude - sourceAirport.Latitude;
-                float deltaAMSL = targetAirport.AMSL - sourceAirport.AMSL;
-                float time = calculateTimePassed();
 
-                Longitude = sourceAirport.Longitude + deltaLongitude * time;
-                Latitude = sourceAirport.Latitude + deltaLatitude * time;
-                AMSL = sourceAirport.AMSL + deltaAMSL * time;
+                float deltaLongitude = (targetAirport.Longitude - Longitude) / calculateTimePassed() * (float)elapsedTime.TotalHours;
+                float deltaLatitude = (targetAirport.Latitude - Latitude) / calculateTimePassed() * (float)elapsedTime.TotalHours;
+                float deltaAMSL = (targetAirport.AMSL - AMSL) / calculateTimePassed() * (float)elapsedTime.TotalHours;
+
+                Longitude += deltaLongitude;
+                Latitude += deltaLatitude;
+                AMSL += deltaAMSL;
             }
             else if (calculateTimePassed() == 0)
             {
@@ -136,7 +144,10 @@ namespace OOD_24L_01180689.src.dto.entities.flights
                     AMSL = sourceAirport3.AMSL;
                 }
             }
+
+            CalculateRotation();
         }
+
 
     }
 }

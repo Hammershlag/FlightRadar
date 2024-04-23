@@ -2,6 +2,6 @@
 {
     public interface IDataSource
     {
-        void ReadData(string dir, string filename);
+        void ReadData(string filename);
     }
 }

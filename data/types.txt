@@ -27,3 +27,11 @@ FL,1403,0,5,20:00,21:00,106.57,-35.89,9399,1303,[54;173;312;284;293],[28;38;34;3
 Part 4
 
 cannot use 'type' or check if obj is of some type. Suggested to use ood patterns: visitor and iterator
+
+
+Part 5
+First read all data and then get updates from the server.
+It is expected to make a system to manage events in a smart way. 
+Use observer pattern
+Logging - previous state and then new state
+OnIDUpdate - if we update for example passenger id from 0 to 999 we should update it everywhere. Like in flights etc

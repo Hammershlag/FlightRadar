@@ -6,8 +6,8 @@ namespace OOD_24L_01180689.src.dto.entities.people
     {
         public string Name { get; protected set; }
         public ulong Age { get; protected set; }
-        public string Phone { get; protected set; }
-        public string Email { get; protected set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
 
         protected Person(string type, ulong id, string name, ulong age, string phone, string email) :
             base(type, id)

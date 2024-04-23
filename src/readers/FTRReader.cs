@@ -22,9 +22,11 @@ namespace OOD_24L_01180689.src.readers
                 { "P", new PassengerFactory() }
             };
 
-        public override void ReadData(string dir, string filename)
+        public override void ReadData(string filename)
         {
-            var filePath = dir + "\\" + filename;
+            Console.WriteLine();
+            Console.WriteLine("FTR Reader started.");
+            var filePath = filename;
 
             if (!filePath.EndsWith(".ftr"))
             {

@@ -6,7 +6,7 @@ namespace OOD_24L_01180689.src.visualization
     public class FlightsGUIDataAdapter : FlightsGUIData
     {
         private List<Flight> flightsData = new List<Flight>();
-        public static int displayFlightsFlag = 2;
+        public static int displayFlightsFlag = 0;
 
         public void UpdateFlights()
         {

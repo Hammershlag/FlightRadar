@@ -1,11 +1,16 @@
-﻿using OOD_24L_01180689.src.dto.entities;
+﻿using DynamicData;
+using NetworkSourceSimulator;
+using OOD_24L_01180689.src.dto.entities;
+using OOD_24L_01180689.src.dto.entities.cargo;
 using OOD_24L_01180689.src.dto.entities.flights;
+using OOD_24L_01180689.src.dto.entities.people;
 using OOD_24L_01180689.src.dto.reports.reporters;
 using OOD_24L_01180689.src.dto.reports.reporters.reporters;
+using OOD_24L_01180689.src.observers;
 
 namespace OOD_24L_01180689.src.dataStorage
 {
-    public class DataStorage
+    public class DataStorage : IObserver
     {
         private static readonly object lockObject = new object();
         private static DataStorage instance;
@@ -58,6 +63,20 @@ namespace OOD_24L_01180689.src.dataStorage
                 if (obj as IReportable != null)
                     reporters.Add((IReportable)obj);
                 objectList.Add(obj);
+            }
+        }
+
+        public void Remove(object obj)
+        {
+            lock (lockObject)
+            {
+                if (obj as Entity != null)
+                    iDEntityMap.Remove(((Entity)obj).getID());
+                if (obj as Flight != null)
+                    flightList.Remove((Flight)obj);
+                if (obj as IReportable != null)
+                    reporters.Remove((IReportable)obj);
+                objectList.Remove(obj);
             }
         }
 
@@ -122,6 +141,68 @@ namespace OOD_24L_01180689.src.dataStorage
             lock (lockObject)
             {
                 return flightList.Count;
+            }
+        }
+
+        public void Update(IDUpdateArgs e)
+        {
+            var obj = GetIDEntityMap();
+            if (obj.TryGetValue(e.ObjectID, out Entity ent) && !obj.TryGetValue(e.NewObjectID, out Entity hopeThisIsNull))
+            {
+                Remove(ent);
+                ent.ID = e.NewObjectID;
+                Add(ent);
+                if (ent as Person != null || ent as Cargo != null)
+                {
+                    for (int i = 0; i < GetFlights().Count; i++)
+                    {
+                        if (GetFlights()[i].CrewID.Contains(e.ObjectID) && ent as Person != null)
+                        {
+                            GetFlights()[i].CrewID.Replace(e.ObjectID, e.NewObjectID);
+                        }
+                        if (GetFlights()[i].LoadID.Contains(e.ObjectID) && ent as Cargo != null)
+                        {
+                            GetFlights()[i].LoadID.Replace(e.ObjectID, e.NewObjectID);
+                        }
+                    }
+                }
+            }
+            
+        }
+
+        public void Update(PositionUpdateArgs e)
+        {
+            if (GetIDEntityMap().TryGetValue(e.ObjectID, out Entity ent))
+            {
+                if (ent as Flight != null)
+                {
+                    lock (lockObject)
+                    {
+                        Flight flight = (Flight)ent;
+                        flight.Latitude = e.Latitude;
+                        flight.Longitude = e.Longitude;
+                        flight.AMSL = e.AMSL;
+                    }
+                }
+            }
+            
+        }
+
+        public void Update(ContactInfoUpdateArgs e)
+        {
+            
+            if (GetIDEntityMap().TryGetValue(e.ObjectID, out Entity ent))
+            {
+                if (ent as Person != null)
+                {
+                    lock (lockObject)
+                    {
+                        Person person = (Person)ent;
+                        person.Email = e.EmailAddress;
+                        person.Phone = e.PhoneNumber;
+                    }
+
+                }
             }
         }
     }
