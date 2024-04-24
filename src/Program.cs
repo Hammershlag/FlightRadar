@@ -22,7 +22,7 @@ class Program
         string outputDir = "data";
         int minDelay = 100;
         int maxDelay = 200;
-        ILogger logger = new FileLogger();
+        ILogger logger = new ConsoleLogger();
 
         Console.Clear();
 
