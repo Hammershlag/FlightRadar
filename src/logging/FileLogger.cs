@@ -64,24 +64,19 @@ namespace OOD_24L_01180689.src.logging
         public void Update(IDUpdateArgs e)
         {
             Log($"Updating from ID {e.ObjectID} to ID {e.NewObjectID}");
-            if (DataStorage.GetInstance.GetIDEntityMap().TryGetValue(e.NewObjectID, out Entity newEnt) &&
-                !DataStorage.GetInstance.GetIDEntityMap().TryGetValue(e.ObjectID, out Entity oldEnt))
+            if (DataStorage.GetInstance.GetIDEntityMap().TryGetValue(e.ObjectID, out Entity oldEnt) &&
+                !DataStorage.GetInstance.GetIDEntityMap().TryGetValue(e.NewObjectID, out Entity newEnt))
             {
-                Log($"ID Update from {e.ObjectID} to {e.NewObjectID} successfully");
+                Log($"ID Updated from ID {e.ObjectID} to ID {e.NewObjectID} successfully");
             }
             else if (DataStorage.GetInstance.GetIDEntityMap().TryGetValue(e.ObjectID, out Entity oldEnt2) &&
-                     !DataStorage.GetInstance.GetIDEntityMap().TryGetValue(e.NewObjectID, out Entity newEnt2))
-            {
-                Log($"Entity update failed");
-            }
-            else if (DataStorage.GetInstance.GetIDEntityMap().TryGetValue(e.ObjectID, out Entity oldEnt3) &&
-                     DataStorage.GetInstance.GetIDEntityMap().TryGetValue(e.NewObjectID, out Entity newEnt3))
+                     DataStorage.GetInstance.GetIDEntityMap().TryGetValue(e.NewObjectID, out Entity newEnt2))
             {
                 Log($"Entity with ID {e.NewObjectID} already exists");
             }
-            else if (!DataStorage.GetInstance.GetIDEntityMap().TryGetValue(e.ObjectID, out Entity oldEnt4))
+            else
             {
-                Log($"Entity with ID {e.ObjectID} doesn't exist");
+                Log($"Entity ID update failed");
             }
         }
 
@@ -94,10 +89,8 @@ namespace OOD_24L_01180689.src.logging
                 {
                     Flight flight = (Flight)ent;
                     Log(
-                        $"Position Update from {flight.Latitude}, {flight.Longitude}, {flight.AMSL} to {e.Latitude}, {e.Longitude}, {e.AMSL}");
-                    flight.Latitude = e.Latitude;
-                    flight.Longitude = e.Longitude;
-                    flight.AMSL = e.AMSL;
+                        $"Position updated Lat: {flight.Latitude} -> {e.Latitude}, Lon: {flight.Longitude} -> {e.Longitude}, AMSL: {flight.AMSL} -> {e.AMSL} successfully");
+
                 }
                 else
                 {
@@ -120,9 +113,8 @@ namespace OOD_24L_01180689.src.logging
                 {
                     Person person = (Person)ent;
                     Log(
-                        $"Contact Info Update from {person.Email}, {person.Phone} to {e.EmailAddress}, {e.PhoneNumber}");
-                    person.Email = e.EmailAddress;
-                    person.Phone = e.PhoneNumber;
+                        $"Contact Info updated Email: {person.Email} ->, {e.EmailAddress}, Phone Number: {person.Phone} {e.PhoneNumber} successfully");
+
                 }
                 else
                 {

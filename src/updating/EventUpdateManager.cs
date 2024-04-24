@@ -37,8 +37,9 @@ namespace OOD_24L_01180689.src.updating
                 if (instance == null)
                 {
                     instance = new EventUpdateManager(input, minDelay, maxDelay);
-                    instance.AddObserver(DataStorage.GetInstance);
                     instance.AddObserver(logger);
+
+                    instance.AddObserver(DataStorage.GetInstance);
                 }
             }
 

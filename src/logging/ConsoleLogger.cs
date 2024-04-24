@@ -28,75 +28,67 @@ namespace OOD_24L_01180689.src.logging
 
         public void Update(IDUpdateArgs e)
         {
-            Console.WriteLine($"Updating from ID {e.ObjectID} to ID {e.NewObjectID}");
-            if (DataStorage.GetInstance.GetIDEntityMap().TryGetValue(e.NewObjectID, out Entity newEnt) &&
-                !DataStorage.GetInstance.GetIDEntityMap().TryGetValue(e.ObjectID, out Entity oldEnt))
+            Log($"Updating from ID {e.ObjectID} to ID {e.NewObjectID}");
+            if (DataStorage.GetInstance.GetIDEntityMap().TryGetValue(e.ObjectID, out Entity oldEnt) &&
+                !DataStorage.GetInstance.GetIDEntityMap().TryGetValue(e.NewObjectID, out Entity newEnt))
             {
-                Console.WriteLine($"ID Update from {e.ObjectID} to {e.NewObjectID} successfully");
+                Log($"ID Updated from ID {e.ObjectID} to ID {e.NewObjectID} successfully");
             }
             else if (DataStorage.GetInstance.GetIDEntityMap().TryGetValue(e.ObjectID, out Entity oldEnt2) &&
-                     !DataStorage.GetInstance.GetIDEntityMap().TryGetValue(e.NewObjectID, out Entity newEnt2))
+                     DataStorage.GetInstance.GetIDEntityMap().TryGetValue(e.NewObjectID, out Entity newEnt2))
             {
-                Console.WriteLine($"Entity update failed");
+                Log($"Entity with ID {e.NewObjectID} already exists");
             }
-            else if (DataStorage.GetInstance.GetIDEntityMap().TryGetValue(e.ObjectID, out Entity oldEnt3) &&
-                     DataStorage.GetInstance.GetIDEntityMap().TryGetValue(e.NewObjectID, out Entity newEnt3))
+            else
             {
-                Console.WriteLine($"Entity with ID {e.NewObjectID} already exists");
-            }
-            else if (!DataStorage.GetInstance.GetIDEntityMap().TryGetValue(e.ObjectID, out Entity oldEnt4))
-            {
-                Console.WriteLine($"Entity with ID {e.ObjectID} doesn't exist");
+                Log($"Entity ID update failed");
             }
         }
 
         public void Update(PositionUpdateArgs e)
         {
-            Console.WriteLine($"Updating position of entity with ID {e.ObjectID}");
+            Log($"Updating position of entity with ID {e.ObjectID}");
             if (DataStorage.GetInstance.GetIDEntityMap().TryGetValue(e.ObjectID, out Entity ent))
             {
                 if (ent as Flight != null)
                 {
                     Flight flight = (Flight)ent;
-                    Console.WriteLine(
-                        $"Position Update from {flight.Latitude}, {flight.Longitude}, {flight.AMSL} to {e.Latitude}, {e.Longitude}, {e.AMSL}");
-                    flight.Latitude = e.Latitude;
-                    flight.Longitude = e.Longitude;
-                    flight.AMSL = e.AMSL;
+                    Log(
+                        $"Position updated Lat: {flight.Latitude} -> {e.Latitude}, Lon: {flight.Longitude} -> {e.Longitude}, AMSL: {flight.AMSL} -> {e.AMSL} successfully");
+
                 }
                 else
                 {
-                    Console.WriteLine("Not a flight");
+                    Log("Not a flight");
                 }
             }
             else
             {
-                Console.WriteLine("Entity with ID not found");
+                Log("Entity with ID not found");
             }
         }
 
         public void Update(ContactInfoUpdateArgs e)
         {
-            Console.WriteLine($"Updating contact info of entity with ID {e.ObjectID}");
+            Log($"Updating contact info of entity with ID {e.ObjectID}");
 
             if (DataStorage.GetInstance.GetIDEntityMap().TryGetValue(e.ObjectID, out Entity ent))
             {
                 if (ent as Person != null)
                 {
                     Person person = (Person)ent;
-                    Console.WriteLine(
-                        $"Contact Info Update from {person.Email}, {person.Phone} to {e.EmailAddress}, {e.PhoneNumber}");
-                    person.Email = e.EmailAddress;
-                    person.Phone = e.PhoneNumber;
+                    Log(
+                        $"Contact Info updated Email: {person.Email} ->, {e.EmailAddress}, Phone Number: {person.Phone} {e.PhoneNumber} successfully");
+
                 }
                 else
                 {
-                    Console.WriteLine("Entity is not a person");
+                    Log("Entity is not a person");
                 }
             }
             else
             {
-                Console.WriteLine("Entity with ID not found");
+                Log("Entity with ID not found");
             }
         }
     }
