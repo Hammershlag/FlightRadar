@@ -38,7 +38,6 @@ namespace OOD_24L_01180689.src.dto.entities.flights
         }
 
 
-
         public override string ToString()
         {
             return
@@ -116,8 +115,10 @@ namespace OOD_24L_01180689.src.dto.entities.flights
             {
                 Airport targetAirport = target as Airport;
 
-                float deltaLongitude = (targetAirport.Longitude - Longitude) / calculateTimePassed() * (float)elapsedTime.TotalHours;
-                float deltaLatitude = (targetAirport.Latitude - Latitude) / calculateTimePassed() * (float)elapsedTime.TotalHours;
+                float deltaLongitude = (targetAirport.Longitude - Longitude) / calculateTimePassed() *
+                                       (float)elapsedTime.TotalHours;
+                float deltaLatitude = (targetAirport.Latitude - Latitude) / calculateTimePassed() *
+                                      (float)elapsedTime.TotalHours;
                 float deltaAMSL = (targetAirport.AMSL - AMSL) / calculateTimePassed() * (float)elapsedTime.TotalHours;
 
                 Longitude += deltaLongitude;
@@ -147,7 +148,5 @@ namespace OOD_24L_01180689.src.dto.entities.flights
 
             CalculateRotation();
         }
-
-
     }
 }

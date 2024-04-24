@@ -41,7 +41,7 @@ namespace OOD_24L_01180689.src.logging
                     writer.WriteLine($"\nLog updated on {DateTime.Now}\n");
                 }
             }
-            
+
 
             filename = todayLogFileName;
         }
@@ -93,7 +93,8 @@ namespace OOD_24L_01180689.src.logging
                 if (ent as Flight != null)
                 {
                     Flight flight = (Flight)ent;
-                    Log($"Position Update from {flight.Latitude}, {flight.Longitude}, {flight.AMSL} to {e.Latitude}, {e.Longitude}, {e.AMSL}");
+                    Log(
+                        $"Position Update from {flight.Latitude}, {flight.Longitude}, {flight.AMSL} to {e.Latitude}, {e.Longitude}, {e.AMSL}");
                     flight.Latitude = e.Latitude;
                     flight.Longitude = e.Longitude;
                     flight.AMSL = e.AMSL;
@@ -118,7 +119,8 @@ namespace OOD_24L_01180689.src.logging
                 if (ent as Person != null)
                 {
                     Person person = (Person)ent;
-                    Log($"Contact Info Update from {person.Email}, {person.Phone} to {e.EmailAddress}, {e.PhoneNumber}");
+                    Log(
+                        $"Contact Info Update from {person.Email}, {person.Phone} to {e.EmailAddress}, {e.PhoneNumber}");
                     person.Email = e.EmailAddress;
                     person.Phone = e.PhoneNumber;
                 }
@@ -132,6 +134,5 @@ namespace OOD_24L_01180689.src.logging
                 Log("Entity with ID not found");
             }
         }
-
     }
 }

@@ -14,6 +14,5 @@ namespace OOD_24L_01180689.src.observers
         void Update(IDUpdateArgs args);
         void Update(PositionUpdateArgs args);
         void Update(ContactInfoUpdateArgs args);
-
     }
 }

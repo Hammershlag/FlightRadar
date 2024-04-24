@@ -10,7 +10,6 @@ namespace OOD_24L_01180689.src.logging
 {
     public class ConsoleLogger : ILogger
     {
-
         public ConsoleLogger()
         {
         }
@@ -19,7 +18,7 @@ namespace OOD_24L_01180689.src.logging
         {
             try
             {
-                Console.WriteLine( $"{DateTime.Now}: {message}\n");
+                Console.WriteLine($"{DateTime.Now}: {message}\n");
             }
             catch (Exception ex)
             {
@@ -59,7 +58,8 @@ namespace OOD_24L_01180689.src.logging
                 if (ent as Flight != null)
                 {
                     Flight flight = (Flight)ent;
-                    Console.WriteLine($"Position Update from {flight.Latitude}, {flight.Longitude}, {flight.AMSL} to {e.Latitude}, {e.Longitude}, {e.AMSL}");
+                    Console.WriteLine(
+                        $"Position Update from {flight.Latitude}, {flight.Longitude}, {flight.AMSL} to {e.Latitude}, {e.Longitude}, {e.AMSL}");
                     flight.Latitude = e.Latitude;
                     flight.Longitude = e.Longitude;
                     flight.AMSL = e.AMSL;
@@ -84,7 +84,8 @@ namespace OOD_24L_01180689.src.logging
                 if (ent as Person != null)
                 {
                     Person person = (Person)ent;
-                    Console.WriteLine($"Contact Info Update from {person.Email}, {person.Phone} to {e.EmailAddress}, {e.PhoneNumber}");
+                    Console.WriteLine(
+                        $"Contact Info Update from {person.Email}, {person.Phone} to {e.EmailAddress}, {e.PhoneNumber}");
                     person.Email = e.EmailAddress;
                     person.Phone = e.PhoneNumber;
                 }

@@ -14,7 +14,6 @@ using OOD_24L_01180689.src.updating;
 
 class Program
 {
-
     static void Main(string[] args)
     {
         string dir = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..");
@@ -51,5 +50,4 @@ class Program
         flightTrackerUpdater.Stop();
         eventHandler.Stop();
     }
-
 }

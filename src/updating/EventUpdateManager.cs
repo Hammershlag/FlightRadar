@@ -95,7 +95,6 @@ namespace OOD_24L_01180689.src.updating
             {
                 obs.Update(e);
             }
-            
         }
 
         private void HandleContactInfoUpdate(object sender, ContactInfoUpdateArgs e)
@@ -104,7 +103,6 @@ namespace OOD_24L_01180689.src.updating
             {
                 obs.Update(e);
             }
-            
         }
 
         public void AddObserver(IObserver observer)
@@ -116,7 +114,5 @@ namespace OOD_24L_01180689.src.updating
         {
             observers.Remove(observer);
         }
-
-        
     }
 }
