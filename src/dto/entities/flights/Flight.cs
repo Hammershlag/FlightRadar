@@ -1,21 +1,24 @@
-﻿using OOD_24L_01180689.src.dataStorage;
+﻿using Avalonia;
+using OOD_24L_01180689.src.dataStorage;
 using OOD_24L_01180689.src.dto.entities;
 using OOD_24L_01180689.src.dto.entities.airports;
+using System.Text;
+using OOD_24L_01180689.src.console.commands;
 
 namespace OOD_24L_01180689.src.dto.entities.flights
 {
     public class Flight : Entity
     {
-        public ulong OriginID { get; protected set; }
-        public ulong TargetID { get; protected set; }
-        public string TakeOffTime { get; protected set; }
-        public string LandingTime { get; protected set; }
+        public ulong OriginID { get; set; }
+        public ulong TargetID { get; set; }
+        public string TakeOffTime { get; set; }
+        public string LandingTime { get; set; }
         public float Longitude { get; set; }
         public float Latitude { get; set; }
         public float AMSL { get; set; }
-        public ulong PlaneID { get; protected set; }
-        public ulong[] CrewID { get; protected set; }
-        public ulong[] LoadID { get; protected set; }
+        public ulong PlaneID { get; set; }
+        public ulong[] CrewID { get; set; }
+        public ulong[] LoadID { get; set; }
 
         private DateTime lastUpdate;
 
@@ -43,6 +46,24 @@ namespace OOD_24L_01180689.src.dto.entities.flights
             return
                 $"Flight: {Type} {ID} {OriginID} {TargetID} {TakeOffTime} {LandingTime} {Longitude} {Latitude} {AMSL} {PlaneID} {CrewID} {LoadID}";
         }
+
+        protected override void InitializeFieldGetters()
+        {
+            fieldGetters["ID"] = () => ID;
+            fieldGetters["TYPE"] = () => Type;
+            fieldGetters["ORIGIN ID"] = () => OriginID;
+            fieldGetters["TARGET ID"] = () => TargetID;
+            fieldGetters["TAKEOFF TIME"] = () => TakeOffTime;
+            fieldGetters["LANDING TIME"] = () => LandingTime;
+            fieldGetters["LONGITUDE"] = () => Longitude;
+            fieldGetters["LATITUDE"] = () => Latitude;
+            fieldGetters["AMSL"] = () => AMSL;
+            fieldGetters["PLANE ID"] = () => PlaneID;
+            fieldGetters["CREW ID"] = () => string.Join(",", CrewID);
+            fieldGetters["LOAD ID"] = () => string.Join(",", LoadID);
+        }
+
+
 
         public float calculateTimePassed()
         {

@@ -4,8 +4,8 @@ namespace OOD_24L_01180689.src.dto.entities.people
 {
     public abstract class Person : Entity
     {
-        public string Name { get; protected set; }
-        public ulong Age { get; protected set; }
+        public string Name { get; set; }
+        public ulong Age { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
 

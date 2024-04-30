@@ -4,9 +4,9 @@ namespace OOD_24L_01180689.src.dto.entities.planes
 {
     public abstract class Plane : Entity
     {
-        public string Serial { get; protected set; }
-        public string CountryISO { get; protected set; }
-        public string Model { get; protected set; }
+        public string Serial { get; set; }
+        public string CountryISO { get; set; }
+        public string Model { get; set; }
 
         protected Plane(string type, ulong id, string serial, string countryISO, string model) :
             base(type, id)

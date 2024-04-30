@@ -1,15 +1,17 @@
-﻿using OOD_24L_01180689.src.dto.reports.reporters;
+﻿using System.Text;
+using OOD_24L_01180689.src.console.commands;
+using OOD_24L_01180689.src.dto.reports.reporters;
 
 namespace OOD_24L_01180689.src.dto.entities.airports
 {
     public class Airport : Entity, IReportable
     {
-        public string Name { get; protected set; }
-        public string Code { get; protected set; }
-        public float Longitude { get; protected set; }
-        public float Latitude { get; protected set; }
-        public float AMSL { get; protected set; }
-        public string CountryISO { get; protected set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
+        public float Longitude { get; set; }
+        public float Latitude { get; set; }
+        public float AMSL { get; set; }
+        public string CountryISO { get; set; }
 
         public Airport() : base("Wrong", ulong.MaxValue)
         {
@@ -27,11 +29,23 @@ namespace OOD_24L_01180689.src.dto.entities.airports
             CountryISO = countryISO;
         }
 
+        protected override void InitializeFieldGetters()
+        {
+            fieldGetters["ID"] = () => ID;
+            fieldGetters["TYPE"] = () => Type;
+            fieldGetters["NAME"] = () => Name;
+            fieldGetters["CODE"] = () => Code;
+            fieldGetters["LONGITUDE"] = () => Longitude;
+            fieldGetters["LATITUDE"] = () => Latitude;
+            fieldGetters["AMSL"] = () => AMSL;
+            fieldGetters["COUNTRY ISO"] = () => CountryISO;
+        }
+
         public override string ToString()
         {
             return $"Airport: {Type} {ID} {Name} {Code} {Longitude} {Latitude} {AMSL} {CountryISO}";
         }
-
+        
         public void Accept(INewsVisitor visitor)
         {
             visitor.Visit(this);

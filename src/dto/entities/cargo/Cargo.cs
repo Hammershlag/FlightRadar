@@ -1,10 +1,14 @@
-﻿namespace OOD_24L_01180689.src.dto.entities.cargo
+﻿using System.Text;
+using System.Xml.Linq;
+using OOD_24L_01180689.src.console.commands;
+
+namespace OOD_24L_01180689.src.dto.entities.cargo
 {
     public class Cargo : Entity
     {
-        public float Weight { get; protected set; }
-        public string Code { get; protected set; }
-        public string Description { get; protected set; }
+        public float Weight { get; set; }
+        public string Code { get; set; }
+        public string Description { get; set; }
 
         public Cargo(string type, ulong id, float weight, string code, string description) :
             base(type, id)
@@ -18,6 +22,15 @@
         public override string ToString()
         {
             return $"Cargo: {Type} {ID} {Weight} {Code} {Description}";
+        }
+
+        protected override void InitializeFieldGetters()
+        {
+            fieldGetters["ID"] = () => ID;
+            fieldGetters["TYPE"] = () => Type;
+            fieldGetters["WEIGHT"] = () => Weight;
+            fieldGetters["CODE"] = () => Code;
+            fieldGetters["DESCRIPTION"] = () => Description;
         }
     }
 }
