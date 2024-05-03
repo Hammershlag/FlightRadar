@@ -25,6 +25,18 @@ namespace OOD_24L_01180689.src.dto.entities.planes
             return $"CargoPlane: {Type} {ID} {Serial} {CountryISO} {Model} {MaxLoad}";
         }
 
+        public override bool TryParse(Entity input, out Entity output)
+        {
+            if (input as CargoPlane != null)
+            {
+                output = (CargoPlane)input;
+                return true;
+            }
+
+            output = default(CargoPlane);
+            return false;
+        }
+
         protected override void InitializeFieldGetters()
         {
             fieldGetters["ID"] = () => ID;

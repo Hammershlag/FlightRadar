@@ -27,6 +27,18 @@ namespace OOD_24L_01180689.src.dto.entities.people
             return $"Passenger: {Type} {ID} {Name} {Age} {Phone} {Email} {Class} {Miles}";
         }
 
+        public override bool TryParse(Entity input, out Entity output)
+        {
+            if (input as Passenger != null)
+            {
+                output = (Passenger)input;
+                return true;
+            }
+
+            output = default(Passenger);
+            return false;
+        }
+
         protected override void InitializeFieldGetters()
         {
             fieldGetters["ID"] = () => ID;
@@ -41,8 +53,20 @@ namespace OOD_24L_01180689.src.dto.entities.people
 
         protected override void InitializeFieldSetters()
         {
-            fieldSetters["ID"] = (value) => ID = value == null || DataStorage.GetInstance.GetIDEntityMap().TryGetValue((ulong)value, out Entity ignore) ? DataStorage.GetInstance.MaxID() + 1 : (ulong)value;
-            fieldSetters["TYPE"] = (value) => Type = "P";
+            fieldSetters["ID"] = (value) =>
+            {
+                ulong prev = ID;
+                ID = value == null || DataStorage.GetInstance.GetIDEntityMap()
+                    .TryGetValue((ulong)value, out Entity ignore)
+                    ? DataStorage.GetInstance.MaxID() + 1
+                    : (ulong)value;
+                if (prev == null) return;
+
+                foreach (var flight in DataStorage.GetInstance.GetFlights())
+                {
+                    flight.UpdateIDs(prev, ID);
+                }
+            }; fieldSetters["TYPE"] = (value) => Type = "P";
             fieldSetters["NAME"] = (value) => Name = value == null ? "Uninitialized" : (string)value;
             fieldSetters["AGE"] = (value) => Age = value == null ? ulong.MaxValue : (ulong)value;
             fieldSetters["PHONE"] = (value) => Phone = value == null ? "Uninitialized" : (string)value;

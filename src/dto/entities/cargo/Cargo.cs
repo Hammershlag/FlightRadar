@@ -28,6 +28,17 @@ namespace OOD_24L_01180689.src.dto.entities.cargo
             return $"Cargo: {Type} {ID} {Weight} {Code} {Description}";
         }
 
+        public override bool TryParse(Entity input, out Entity output)
+        {
+            if (input as Cargo != null)
+            {
+                output = (Cargo)input;
+                return true;
+            }
+            output = default(Cargo);
+            return false;
+        }
+
         protected override void InitializeFieldGetters()
         {
             fieldGetters["ID"] = () => ID;
@@ -39,8 +50,19 @@ namespace OOD_24L_01180689.src.dto.entities.cargo
 
         protected override void InitializeFieldSetters()
         {
-            fieldSetters["ID"] = (value) => ID = value == null || DataStorage.GetInstance.GetIDEntityMap().TryGetValue((ulong)value, out Entity ignore) ? DataStorage.GetInstance.MaxID() + 1 : (ulong)value;
-            fieldSetters["TYPE"] = (value) => Type = "CA";
+            fieldSetters["ID"] = (value) =>
+            {
+                ulong prev = ID;
+                ID = value == null || DataStorage.GetInstance.GetIDEntityMap()
+                    .TryGetValue((ulong)value, out Entity ignore)
+                    ? DataStorage.GetInstance.MaxID() + 1
+                    : (ulong)value;
+                if (prev == null) return;
+                foreach (var flight in DataStorage.GetInstance.GetFlights())
+                {
+                    flight.UpdateIDs(prev, ID);
+                }
+            }; fieldSetters["TYPE"] = (value) => Type = "CA";
             fieldSetters["WEIGHT"] = (value) => Weight = value == null ? float.MaxValue : (float)value;
             fieldSetters["CODE"] = (value) => Code = value == null ? "Uninitialized" : (string)value;
             fieldSetters["DESCRIPTION"] = (value) => Description = value == null ? "Uninitialized" : (string)value;

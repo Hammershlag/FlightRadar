@@ -30,6 +30,18 @@ namespace OOD_24L_01180689.src.dto.entities.airports
             CountryISO = countryISO;
         }
 
+        public override bool TryParse(Entity input, out Entity output)
+        {
+            if (input as Airport != null)
+            {
+                output = (Airport)input;
+                return true;
+            }
+
+            output = default(Airport);
+            return false;
+        }
+
         protected override void InitializeFieldGetters()
         {
             fieldGetters["ID"] = () => ID;
@@ -44,7 +56,20 @@ namespace OOD_24L_01180689.src.dto.entities.airports
 
         protected override void InitializeFieldSetters()
         {
-            fieldSetters["ID"] = (value) => ID = value == null || DataStorage.GetInstance.GetIDEntityMap().TryGetValue((ulong)value, out Entity ignore) ? DataStorage.GetInstance.MaxID()+1 : (ulong)value;
+            fieldSetters["ID"] = (value) =>
+            {
+                ulong prev = ID;
+                ID = value == null || DataStorage.GetInstance.GetIDEntityMap()
+                    .TryGetValue((ulong)value, out Entity ignore)
+                    ? DataStorage.GetInstance.MaxID() + 1
+                    : (ulong)value;
+                if (prev == null) return;
+
+                foreach (var flight in DataStorage.GetInstance.GetFlights())
+                {
+                    flight.UpdateIDs(prev, ID);
+                }
+            };
             fieldSetters["TYPE"] = (value) => Type = "AI";
             fieldSetters["NAME"] = (value) => Name = value == null ? "Uninitialized" : (string)value;
             fieldSetters["CODE"] = (value) => Code = value == null ? "Uninitialized" : (string)value;

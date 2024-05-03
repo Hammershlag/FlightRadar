@@ -18,17 +18,7 @@ namespace OOD_24L_01180689.src.console.commands.command
     {
         public string objectClass;
         public Dictionary<string, IComparable> keyValSet = new Dictionary<string, IComparable>();
-        protected static readonly Dictionary<string, EntityFactory> factoryMethods =
-            new Dictionary<string, EntityFactory>
-            {
-                { "CargoPlane", new CargoPlaneFactory() },
-                { "PassengerPlane", new PassengerPlaneFactory() },
-                { "Airport", new AirportFactory() },
-                { "Carggo", new CargoFactory() },
-                { "Flight", new FlightFactory() },
-                { "Crew", new CrewFactory() },
-                { "Passenger", new PassengerFactory() }
-            };
+        
 
         public AddCommand(string objectClass, Dictionary<string, IComparable> keyValSet)
         {
@@ -44,7 +34,7 @@ namespace OOD_24L_01180689.src.console.commands.command
                 return false;
             }
 
-            EntityFactory factory = factoryMethods[this.objectClass];
+            EntityFactory factory = Entity.entityFactories[this.objectClass];
             Entity ent = factory.Create();
 
             Action<IComparable> setter;

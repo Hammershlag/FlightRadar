@@ -32,6 +32,7 @@ namespace OOD_24L_01180689.src.console.commands.command
         public override bool Execute()
         {
             //TODO now is ignoring conditions and implement using dictionary
+            PreProcess();
             CreateValidEntities();
             CalculateMaxLength();
 
@@ -62,8 +63,17 @@ namespace OOD_24L_01180689.src.console.commands.command
             }
         }
 
+        private void PreProcess()
+        {
+            if (object_fields.Count == 1 && object_fields[0] == "*")
+            {
+                object_fields = Entity.entityFactories[object_class].Create().fieldGetters.Keys.ToList();
+            }
+        }
+
         private void PrintValidEntities()
         {
+            
             foreach (var valid in valid_entities)
             {
                 StringBuilder sb = new StringBuilder();
@@ -89,79 +99,89 @@ namespace OOD_24L_01180689.src.console.commands.command
 
         private void CreateValidEntities()
         {
-            foreach (var obj in DataStorage.GetInstance.GetObjectList())
+            var def = Entity.entityFactories[object_class].Create();
+            foreach (var obj in DataStorage.GetInstance.GetIDEntityMap().Values)
             {
-                if (this.object_class == "Airport")
+                if (def.TryParse(obj, out Entity output))
                 {
-                    if (object_fields[0] == "*")
-                        object_fields = (new Airport()).fieldGetters.Keys.ToList();
-                    if (CheckType<Airport>.Check(obj, out Airport airport))
-                    {
-                        if (!conditionsList.Check(airport)) continue;
-                        valid_entities.Add(airport);
-                    }
-                }
-                else if (this.object_class == "Cargo")
-                {
-                    if (object_fields[0] == "*")
-                        object_fields = (new Cargo()).fieldGetters.Keys.ToList();
-                    if (CheckType<Cargo>.Check(obj, out Cargo cargo))
-                    {
-                        if (!conditionsList.Check(cargo)) continue;
-                        valid_entities.Add(cargo);
-                    }
-                }
-                else if (this.object_class == "Flight")
-                {
-                    if (object_fields[0] == "*")
-                        object_fields = (new Flight()).fieldGetters.Keys.ToList();
-                    if (CheckType<Flight>.Check(obj, out Flight flight))
-                    {
-                        if (!conditionsList.Check(flight)) continue;
-                        valid_entities.Add(flight);
-                    }
-                }
-                else if (this.object_class == "Crew")
-                {
-                    if (object_fields[0] == "*")
-                        object_fields = (new Crew()).fieldGetters.Keys.ToList();
-                    if (CheckType<Crew>.Check(obj, out Crew crew))
-                    {
-                        if (!conditionsList.Check(crew)) continue;
-                        valid_entities.Add(crew);
-                    }
-                }
-                else if (this.object_class == "Passenger")
-                {
-                    if (object_fields[0] == "*")
-                        object_fields = (new Passenger()).fieldGetters.Keys.ToList();
-                    if (CheckType<Passenger>.Check(obj, out Passenger passenger))
-                    {
-                        if(!conditionsList.Check(passenger)) continue;
-                        valid_entities.Add(passenger);
-                    }
-                }
-                else if (this.object_class == "CargoPlane")
-                {
-                    if (object_fields[0] == "*")
-                        object_fields = (new CargoPlane()).fieldGetters.Keys.ToList();
-                    if (CheckType<CargoPlane>.Check(obj, out CargoPlane cargoPLane))
-                    {
-                        if(!conditionsList.Check(cargoPLane)) continue;
-                        valid_entities.Add(cargoPLane);
-                    }
-                }
-                else if (this.object_class == "PassengerPlane")
-                {
-                    if (object_fields[0] == "*")
-                        object_fields = (new PassengerPlane()).fieldGetters.Keys.ToList();
-                    if (CheckType<PassengerPlane>.Check(obj, out PassengerPlane passengerPlane))
-                    {
-                        if (!conditionsList.Check(passengerPlane)) continue;
-                        valid_entities.Add(passengerPlane);
-                    }
+                    if(!conditionsList.Check(output)) continue;
+                    valid_entities.Add(output);
                 }
             }
+
+            //foreach (var obj in DataStorage.GetInstance.GetObjectList())
+            //{
+            //    if (this.object_class == "Airport")
+            //    {
+            //        if (object_fields[0] == "*")
+            //            object_fields = (new Airport()).fieldGetters.Keys.ToList();
+            //        if (CheckType<Airport>.Check(obj, out Airport airport))
+            //        {
+            //            if (!conditionsList.Check(airport)) continue;
+            //            valid_entities.Add(airport);
+            //        }
+            //    }
+            //    else if (this.object_class == "Cargo")
+            //    {
+            //        if (object_fields[0] == "*")
+            //            object_fields = (new Cargo()).fieldGetters.Keys.ToList();
+            //        if (CheckType<Cargo>.Check(obj, out Cargo cargo))
+            //        {
+            //            if (!conditionsList.Check(cargo)) continue;
+            //            valid_entities.Add(cargo);
+            //        }
+            //    }
+            //    else if (this.object_class == "Flight")
+            //    {
+            //        if (object_fields[0] == "*")
+            //            object_fields = (new Flight()).fieldGetters.Keys.ToList();
+            //        if (CheckType<Flight>.Check(obj, out Flight flight))
+            //        {
+            //            if (!conditionsList.Check(flight)) continue;
+            //            valid_entities.Add(flight);
+            //        }
+            //    }
+            //    else if (this.object_class == "Crew")
+            //    {
+            //        if (object_fields[0] == "*")
+            //            object_fields = (new Crew()).fieldGetters.Keys.ToList();
+            //        if (CheckType<Crew>.Check(obj, out Crew crew))
+            //        {
+            //            if (!conditionsList.Check(crew)) continue;
+            //            valid_entities.Add(crew);
+            //        }
+            //    }
+            //    else if (this.object_class == "Passenger")
+            //    {
+            //        if (object_fields[0] == "*")
+            //            object_fields = (new Passenger()).fieldGetters.Keys.ToList();
+            //        if (CheckType<Passenger>.Check(obj, out Passenger passenger))
+            //        {
+            //            if(!conditionsList.Check(passenger)) continue;
+            //            valid_entities.Add(passenger);
+            //        }
+            //    }
+            //    else if (this.object_class == "CargoPlane")
+            //    {
+            //        if (object_fields[0] == "*")
+            //            object_fields = (new CargoPlane()).fieldGetters.Keys.ToList();
+            //        if (CheckType<CargoPlane>.Check(obj, out CargoPlane cargoPLane))
+            //        {
+            //            if(!conditionsList.Check(cargoPLane)) continue;
+            //            valid_entities.Add(cargoPLane);
+            //        }
+            //    }
+            //    else if (this.object_class == "PassengerPlane")
+            //    {
+            //        if (object_fields[0] == "*")
+            //            object_fields = (new PassengerPlane()).fieldGetters.Keys.ToList();
+            //        if (CheckType<PassengerPlane>.Check(obj, out PassengerPlane passengerPlane))
+            //        {
+            //            if (!conditionsList.Check(passengerPlane)) continue;
+            //            valid_entities.Add(passengerPlane);
+            //        }
+            //    }
+            //}
         }
 
         private void PrintHeader()

@@ -50,6 +50,19 @@ namespace OOD_24L_01180689.src.dto.entities.flights
                 $"Flight: {Type} {ID} {OriginID} {TargetID} {TakeOffTime} {LandingTime} {Longitude} {Latitude} {AMSL} {PlaneID} {CrewID} {LoadID}";
         }
 
+        public override bool TryParse(Entity input, out Entity output)
+        {
+            if (input as Flight != null)
+            {
+                output = input;
+                return true;
+            }
+
+            output = default(Flight);
+            return false;
+
+        }
+
         protected override void InitializeFieldGetters()
         {
             fieldGetters["ID"] = () => ID;
@@ -188,6 +201,30 @@ namespace OOD_24L_01180689.src.dto.entities.flights
             }
 
             CalculateRotation();
+        }
+
+        public void UpdateIDs(ulong prev, ulong id)
+        {
+            if (prev == null) return;
+            if (prev == OriginID)
+            {
+                OriginID = id;
+            }
+
+            if (prev == TargetID)
+            {
+                TargetID = id;
+            }
+
+            if (CrewID.Contains(prev))
+            {
+                CrewID[CrewID.ToList().IndexOf(prev)] = id;
+            }
+
+            if (LoadID.Contains(prev))
+            {
+                LoadID[LoadID.ToList().IndexOf(prev)] = id; 
+            }
         }
     }
 }

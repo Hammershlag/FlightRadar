@@ -1,5 +1,11 @@
 ﻿using System.Drawing;
 using OOD_24L_01180689.src.console.commands;
+using OOD_24L_01180689.src.factories.entityFactories;
+using OOD_24L_01180689.src.factories.entityFactories.airports;
+using OOD_24L_01180689.src.factories.entityFactories.cargo;
+using OOD_24L_01180689.src.factories.entityFactories.flights;
+using OOD_24L_01180689.src.factories.entityFactories.people;
+using OOD_24L_01180689.src.factories.entityFactories.planes;
 using ReactiveUI;
 
 namespace OOD_24L_01180689.src.dto.entities
@@ -19,7 +25,16 @@ namespace OOD_24L_01180689.src.dto.entities
                 { Condition.ConditionType.GREATER, (left, right) => left.CompareTo(right) > 0 }
             };
 
-
+        public static Dictionary<string, EntityFactory> entityFactories = new Dictionary<string, EntityFactory>()
+        {
+            { "Airport", new AirportFactory() },
+            { "Cargo", new CargoFactory() },
+            { "Flight", new FlightFactory() },
+            { "Crew", new CrewFactory() },
+            { "Passenger", new PassengerFactory() },
+            { "CargoPlane", new CargoPlaneFactory() },
+            { "PassengerPlane", new PassengerPlaneFactory() }
+        };
 
         public string Type { get; set; }
         public ulong ID { get; set; }
@@ -91,6 +106,8 @@ namespace OOD_24L_01180689.src.dto.entities
                 return "No field";
             }
         }
+
+        public abstract bool TryParse(Entity input, out Entity output);
 
         protected abstract void InitializeFieldGetters();
 

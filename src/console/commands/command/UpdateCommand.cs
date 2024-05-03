@@ -1,4 +1,6 @@
-﻿using System;
+﻿using OOD_24L_01180689.src.dataStorage;
+using OOD_24L_01180689.src.dto.entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +22,53 @@ namespace OOD_24L_01180689.src.console.commands.command
 
         public override bool Execute()
         {
-            throw new NotImplementedException();
+            if (this.objectClass == null)
+            {
+                Console.WriteLine("Invalid object class");
+                return false;
+            }
+
+            List<ulong> updated = new List<ulong>();
+
+            var factories = Entity.entityFactories;
+
+            if (!factories.ContainsKey(objectClass))
+            {
+                Console.WriteLine($"No factory found for {objectClass}");
+                return false;
+            }
+
+            var def = factories[objectClass];
+            var ent = def.Create();
+
+            foreach (var obj in DataStorage.GetInstance.GetIDEntityMap().Values)
+            {
+                if (ent.TryParse(obj, out Entity output))
+                {
+
+                    if (!conditionsList.Check(output)) continue;
+                    updated.Add(output.ID);
+                    DataStorage.GetInstance.Remove(output);
+
+
+                    foreach (var kvp in keyValSet)
+                    {
+                        if (output.fieldSetters.TryGetValue(kvp.Key, out Action<IComparable> setter))
+                        {
+                            setter(kvp.Value);
+                        }
+                    }
+                    DataStorage.GetInstance.Add(output);
+
+                }
+            }
+
+            
+
+            Console.WriteLine($"Updated {updated.Count} {objectClass}s");
+
+            return true;
         }
+
     }
 }
