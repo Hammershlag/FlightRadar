@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using OOD_24L_01180689.src.console.commands;
+using OOD_24L_01180689.src.dataStorage;
 using OOD_24L_01180689.src.dto.reports.reporters;
 
 namespace OOD_24L_01180689.src.dto.entities.airports
@@ -38,7 +39,19 @@ namespace OOD_24L_01180689.src.dto.entities.airports
             fieldGetters["LONGITUDE"] = () => Longitude;
             fieldGetters["LATITUDE"] = () => Latitude;
             fieldGetters["AMSL"] = () => AMSL;
-            fieldGetters["COUNTRY ISO"] = () => CountryISO;
+            fieldGetters["COUNTRYISO"] = () => CountryISO;
+        }
+
+        protected override void InitializeFieldSetters()
+        {
+            fieldSetters["ID"] = (value) => ID = value == null || DataStorage.GetInstance.GetIDEntityMap().TryGetValue((ulong)value, out Entity ignore) ? DataStorage.GetInstance.MaxID()+1 : (ulong)value;
+            fieldSetters["TYPE"] = (value) => Type = "AI";
+            fieldSetters["NAME"] = (value) => Name = value == null ? "Uninitialized" : (string)value;
+            fieldSetters["CODE"] = (value) => Code = value == null ? "Uninitialized" : (string)value;
+            fieldSetters["LONGITUDE"] = (value) => Longitude = value == null ? float.MaxValue : (float)value;
+            fieldSetters["LATITUDE"] = (value) => Latitude = value == null ? float.MaxValue : (float)value;
+            fieldSetters["AMSL"] = (value) => AMSL = value == null ? float.MaxValue : (float)value;
+            fieldSetters["COUNTRYISO"] = (value) => CountryISO = value == null ? "Uninitialized" : (string)value;
         }
 
         public override string ToString()

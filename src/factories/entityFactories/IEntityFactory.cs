@@ -19,5 +19,10 @@ namespace OOD_24L_01180689.src.factories.entityFactories
         {
             throw new NotImplementedException();
         }
+
+        public virtual Entity Create()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

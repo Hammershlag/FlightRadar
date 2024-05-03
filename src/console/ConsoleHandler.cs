@@ -1,4 +1,6 @@
-﻿using OOD_24L_01180689.src.dataStorage;
+﻿using OOD_24L_01180689.src.console.commands.command;
+using OOD_24L_01180689.src.console.commands.parser;
+using OOD_24L_01180689.src.dataStorage;
 using OOD_24L_01180689.src.reports;
 using OOD_24L_01180689.src.visualization;
 using OOD_24L_01180689.src.writers;
@@ -11,6 +13,7 @@ namespace OOD_24L_01180689.src.console
         private readonly string dir;
         private readonly string outputDir;
         private NewsGenerator newsGenerator;
+        private CommandParser parser = new CommandParser();
 
         public ConsoleHandler(IWriter jsonWriter, string dir, string outputDir, NewsGenerator newsGenerator)
         {
@@ -50,6 +53,14 @@ namespace OOD_24L_01180689.src.console
                     case "report":
                         Report();
                         break;
+                    default:
+                        Command command = parser.Parse(consoleInput);
+                        if (command != null)
+                        {
+                            command.Execute();
+                        }
+                        break;
+
                 }
             }
         }
@@ -62,13 +73,17 @@ namespace OOD_24L_01180689.src.console
             Console.WriteLine($"Serialized data written to file: {outputFilename}");
         }
 
-        private void DisplayHelp()
+        public static void DisplayHelp()
         {
             Console.WriteLine($"Type: \n'exit' to quit" +
                               $"\n'print' to serialize data" +
                               $"\n'help' to display commands" +
                               $"\n'change' to change flight visibility: 0 - all flights, 1 - all flights that are in progress, 2 - each plane should appear only once" +
-                              $"\n'report to report all data that can be reported");
+                              $"\n'report to report all data that can be reported" +
+                              $"\n'add' to add new entity" + 
+                              $"\n'display' to display entities" +
+                              $"\n'update' to update enity" + 
+                              $"\n'delete' to remove entity");
         }
 
         private void ChangeVisibility()

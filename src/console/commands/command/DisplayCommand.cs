@@ -21,11 +21,12 @@ namespace OOD_24L_01180689.src.console.commands.command
         private List<Entity> valid_entities = new List<Entity>();
         private Dictionary<string, int> field_max_len = new Dictionary<string, int>();
 
+
         public DisplayCommand(string object_class, List<string> object_fields, ConditionsList conditionsList)
         {
             this.object_class = object_class;
             this.object_fields = object_fields;
-            this.conditionsList = conditionsList;
+            this.conditionsList = conditionsList == null ? new ConditionsList() : conditionsList;
         }
 
         public override bool Execute()
@@ -80,7 +81,7 @@ namespace OOD_24L_01180689.src.console.commands.command
 
                     sb.Append("  |  ");
                 }
-                Console.WriteLine(sb.ToString().ToCharArray());
+                Console.WriteLine(sb.ToString());
             }
         }
 
@@ -92,6 +93,8 @@ namespace OOD_24L_01180689.src.console.commands.command
             {
                 if (this.object_class == "Airport")
                 {
+                    if (object_fields[0] == "*")
+                        object_fields = (new Airport()).fieldGetters.Keys.ToList();
                     if (CheckType<Airport>.Check(obj, out Airport airport))
                     {
                         if (!conditionsList.Check(airport)) continue;
@@ -100,30 +103,38 @@ namespace OOD_24L_01180689.src.console.commands.command
                 }
                 else if (this.object_class == "Cargo")
                 {
+                    if (object_fields[0] == "*")
+                        object_fields = (new Cargo()).fieldGetters.Keys.ToList();
                     if (CheckType<Cargo>.Check(obj, out Cargo cargo))
                     {
-                        if(!conditionsList.Check(cargo)) continue;
+                        if (!conditionsList.Check(cargo)) continue;
                         valid_entities.Add(cargo);
                     }
                 }
                 else if (this.object_class == "Flight")
                 {
+                    if (object_fields[0] == "*")
+                        object_fields = (new Flight()).fieldGetters.Keys.ToList();
                     if (CheckType<Flight>.Check(obj, out Flight flight))
                     {
-                        if(!conditionsList.Check(flight)) continue;
+                        if (!conditionsList.Check(flight)) continue;
                         valid_entities.Add(flight);
                     }
                 }
                 else if (this.object_class == "Crew")
                 {
+                    if (object_fields[0] == "*")
+                        object_fields = (new Crew()).fieldGetters.Keys.ToList();
                     if (CheckType<Crew>.Check(obj, out Crew crew))
                     {
-                        if(!conditionsList.Check(crew)) continue;
+                        if (!conditionsList.Check(crew)) continue;
                         valid_entities.Add(crew);
                     }
                 }
                 else if (this.object_class == "Passenger")
                 {
+                    if (object_fields[0] == "*")
+                        object_fields = (new Passenger()).fieldGetters.Keys.ToList();
                     if (CheckType<Passenger>.Check(obj, out Passenger passenger))
                     {
                         if(!conditionsList.Check(passenger)) continue;
@@ -132,6 +143,8 @@ namespace OOD_24L_01180689.src.console.commands.command
                 }
                 else if (this.object_class == "CargoPlane")
                 {
+                    if (object_fields[0] == "*")
+                        object_fields = (new CargoPlane()).fieldGetters.Keys.ToList();
                     if (CheckType<CargoPlane>.Check(obj, out CargoPlane cargoPLane))
                     {
                         if(!conditionsList.Check(cargoPLane)) continue;
@@ -140,9 +153,11 @@ namespace OOD_24L_01180689.src.console.commands.command
                 }
                 else if (this.object_class == "PassengerPlane")
                 {
+                    if (object_fields[0] == "*")
+                        object_fields = (new PassengerPlane()).fieldGetters.Keys.ToList();
                     if (CheckType<PassengerPlane>.Check(obj, out PassengerPlane passengerPlane))
                     {
-                        if(!conditionsList.Check(passengerPlane)) continue;
+                        if (!conditionsList.Check(passengerPlane)) continue;
                         valid_entities.Add(passengerPlane);
                     }
                 }

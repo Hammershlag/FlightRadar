@@ -44,5 +44,10 @@ namespace OOD_24L_01180689.src.factories.entityFactories.people
 
             return new Crew(code, id, name, age, phone, email, practice, role);
         }
+
+        public override Crew Create()
+        {
+            return new Crew();
+        }
     }
 }

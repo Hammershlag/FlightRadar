@@ -19,6 +19,7 @@ namespace OOD_24L_01180689.src.dataStorage
         private List<Flight> flightList = new List<Flight>();
         private List<NewsProvider> providers = new List<NewsProvider>();
         private List<IReportable> reporters = new List<IReportable>();
+        public ulong MaxID() => iDEntityMap.Keys.Max();
 
         private DataStorage()
         {

@@ -1,11 +1,13 @@
-﻿using OOD_24L_01180689.src.console.commands;
+﻿using System.Drawing;
+using OOD_24L_01180689.src.console.commands;
 using ReactiveUI;
 
 namespace OOD_24L_01180689.src.dto.entities
 {
     public abstract class Entity
     {
-        protected Dictionary<string, Func<IComparable>> fieldGetters = new Dictionary<string, Func<IComparable>>();
+        public Dictionary<string, Func<IComparable>> fieldGetters = new Dictionary<string, Func<IComparable>>();
+        public Dictionary<string, Action<IComparable>> fieldSetters = new Dictionary<string, Action<IComparable>>();
         private static readonly Dictionary<Condition.ConditionType, Func<IComparable, IComparable, bool>> comparisonFunctions =
             new Dictionary<Condition.ConditionType, Func<IComparable, IComparable, bool>>()
             {
@@ -25,6 +27,7 @@ namespace OOD_24L_01180689.src.dto.entities
         protected Entity(string type, ulong ID)
         {
             InitializeFieldGetters();
+            InitializeFieldSetters();
             this.ID = ID;
             Type = type;
         }
@@ -46,12 +49,12 @@ namespace OOD_24L_01180689.src.dto.entities
 
             Func<IComparable, IComparable> fieldValueFunc = (value) => value;
 
-            if (!fieldGetters.TryGetValue(condition.FieldLeft.ToString(), out leftGetter))
+            if (!fieldGetters.TryGetValue(condition.FieldLeft.ToString().ToUpper(), out leftGetter))
             {
                 leftGetter = () => fieldValueFunc(condition.FieldLeft);
             }
 
-            if (!fieldGetters.TryGetValue(condition.FieldRight.ToString(), out rightGetter))
+            if (!fieldGetters.TryGetValue(condition.FieldRight.ToString().ToUpper(), out rightGetter))
             {
                 rightGetter = () => fieldValueFunc(condition.FieldRight);
             }
@@ -90,5 +93,7 @@ namespace OOD_24L_01180689.src.dto.entities
         }
 
         protected abstract void InitializeFieldGetters();
+
+        protected abstract void InitializeFieldSetters();
     }
 }

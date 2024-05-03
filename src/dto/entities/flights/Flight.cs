@@ -22,6 +22,9 @@ namespace OOD_24L_01180689.src.dto.entities.flights
 
         private DateTime lastUpdate;
 
+        public Flight() : base("Wrong", ulong.MaxValue)
+        {
+        }
         public Flight(string type, ulong id, ulong originID, ulong targetID, string takeOffTime, string landingTime,
             float longitude, float latitude, float amsl, ulong planeID, ulong[] crewID, ulong[] loadID) :
             base(type, id)
@@ -51,17 +54,34 @@ namespace OOD_24L_01180689.src.dto.entities.flights
         {
             fieldGetters["ID"] = () => ID;
             fieldGetters["TYPE"] = () => Type;
-            fieldGetters["ORIGIN ID"] = () => OriginID;
-            fieldGetters["TARGET ID"] = () => TargetID;
-            fieldGetters["TAKEOFF TIME"] = () => TakeOffTime;
-            fieldGetters["LANDING TIME"] = () => LandingTime;
+            fieldGetters["ORIGINID"] = () => OriginID;
+            fieldGetters["TARGETID"] = () => TargetID;
+            fieldGetters["TAKEOFFTIME"] = () => TakeOffTime;
+            fieldGetters["LANDINGTIME"] = () => LandingTime;
             fieldGetters["LONGITUDE"] = () => Longitude;
             fieldGetters["LATITUDE"] = () => Latitude;
             fieldGetters["AMSL"] = () => AMSL;
-            fieldGetters["PLANE ID"] = () => PlaneID;
-            fieldGetters["CREW ID"] = () => string.Join(",", CrewID);
-            fieldGetters["LOAD ID"] = () => string.Join(",", LoadID);
+            fieldGetters["PLANEID"] = () => PlaneID;
+            fieldGetters["CREWID"] = () => string.Join(",", CrewID);
+            fieldGetters["LOADID"] = () => string.Join(",", LoadID);
         }
+
+        protected override void InitializeFieldSetters()
+        {
+            fieldSetters["ID"] = (value) => ID = value == null || DataStorage.GetInstance.GetIDEntityMap().TryGetValue((ulong)value, out Entity ignore) ? DataStorage.GetInstance.MaxID() + 1 : (ulong)value;
+            fieldSetters["TYPE"] = (value) => Type = "FL";
+            fieldSetters["ORIGINID"] = (value) => OriginID = value == null ? ulong.MaxValue : (ulong)value;
+            fieldSetters["TARGETID"] = (value) => TargetID = value == null ? ulong.MaxValue : (ulong)value;
+            fieldSetters["TAKEOFFTIME"] = (value) => TakeOffTime = value == null ? "Uninitialized" : ((DateTime)value).ToString("HH:mm");
+            fieldSetters["LANDINGTIME"] = (value) => LandingTime = value == null ? "Uninitialized" : ((DateTime)value).ToString("HH:mm");
+            fieldSetters["LONGITUDE"] = (value) => Longitude = value == null ? float.MaxValue : (float)value;
+            fieldSetters["LATITUDE"] = (value) => Latitude = value == null ? float.MaxValue : (float)value;
+            fieldSetters["AMSL"] = (value) => AMSL = value == null ? float.MaxValue : (float)value;
+            fieldSetters["PLANEID"] = (value) => PlaneID = value == null ? ulong.MaxValue : (ulong)value;
+            fieldSetters["CREWID"] = (value) => CrewID = value == null ? new ulong[0] : ((string)value).Split(',').Select(ulong.Parse).ToArray();
+            fieldSetters["LOADID"] = (value) => LoadID = value == null ? new ulong[0] : ((string)value).Split(',').Select(ulong.Parse).ToArray();
+        }
+
 
 
 

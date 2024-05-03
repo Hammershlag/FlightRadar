@@ -44,5 +44,10 @@ namespace OOD_24L_01180689.src.factories.entityFactories.planes
             return new PassengerPlane(code, id, serial, countryISO, model, firstClassSize, businessClassSize,
                 economyClassSize);
         }
+
+        public override PassengerPlane Create()
+        {
+            return new PassengerPlane();
+        }
     }
 }

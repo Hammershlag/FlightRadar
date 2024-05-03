@@ -44,5 +44,10 @@ namespace OOD_24L_01180689.src.factories.entityFactories.people
 
             return new Passenger(code, id, name, age, phone, email, _class, miles);
         }
+
+        public override Passenger Create()
+        {
+            return new Passenger();
+        }
     }
 }

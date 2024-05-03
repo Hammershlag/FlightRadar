@@ -39,5 +39,10 @@ namespace OOD_24L_01180689.src.factories.entityFactories.planes
 
             return new CargoPlane(code, id, serial, countryISO, model, maxLoad);
         }
+
+        public override CargoPlane Create()
+        {
+            return new CargoPlane();
+        }
     }
 }

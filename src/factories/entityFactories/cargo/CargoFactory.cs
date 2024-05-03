@@ -40,5 +40,10 @@ namespace OOD_24L_01180689.src.factories.entityFactories.cargo
 
             return new Cargo(code, id, weight, cargoCode, description);
         }
+
+        public override Cargo Create()
+        {
+            return new Cargo();
+        }
     }
 }

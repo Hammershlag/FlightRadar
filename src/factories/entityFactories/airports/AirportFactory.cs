@@ -45,5 +45,10 @@ namespace OOD_24L_01180689.src.factories.entityFactories.airports
 
             return new Airport(code, id, name, airportCode, longitude, latitude, amsl, countryISO);
         }
+
+        public override Airport Create()
+        {
+            return new Airport();
+        }
     }
 }

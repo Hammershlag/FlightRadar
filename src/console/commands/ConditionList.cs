@@ -44,6 +44,11 @@ namespace OOD_24L_01180689.src.console.commands
 
             bool result = ent.CheckCondition(Conditions[0]);
 
+            if (Conditions.Count == 1)
+            {
+                return result;
+            }
+
             result = Conditions.Skip(1)
                 .Zip(AndOrs, (condition, conjunction) => (Condition: condition, Conjunction: conjunction))
                 .Aggregate(result, (currentResult, pair) =>

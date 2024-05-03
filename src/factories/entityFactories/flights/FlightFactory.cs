@@ -83,5 +83,10 @@ namespace OOD_24L_01180689.src.factories.entityFactories.flights
 
             return result;
         }
+
+        public override Flight Create()
+        {
+            return new Flight();
+        }
     }
 }
