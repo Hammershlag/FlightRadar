@@ -1,20 +1,18 @@
-﻿using OOD_24L_01180689.src.writers;
-using OOD_24L_01180689.src.serverSimulator;
-using IDataSource = OOD_24L_01180689.src.readers.IDataSource;
+﻿using OOD_24L_01180689.src.console;
 using OOD_24L_01180689.src.factories.readers;
 using OOD_24L_01180689.src.factories.writersFactories;
+using OOD_24L_01180689.src.serverSimulator;
 using OOD_24L_01180689.src.threads;
-using OOD_24L_01180689.src.console;
 
-class ProgramPart3
+internal class ProgramPart3
 {
-    static void Main3(string[] args)
+    private static void Main3(string[] args)
     {
-        string dir = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..");
-        string input = Path.Combine(dir, "data", "input_example.ftr");
-        string outputDir = "data";
-        int minDelay = 0;
-        int maxDelay = 0;
+        var dir = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..");
+        var input = Path.Combine(dir, "data", "input_example.ftr");
+        var outputDir = "data";
+        var minDelay = 0;
+        var maxDelay = 0;
 
         var objectCountDisplay = ObjectCountDisplay.GetInstance;
         objectCountDisplay.Start();
@@ -27,11 +25,11 @@ class ProgramPart3
 
 
         IFileReaderFactory fileReaderFactory = new ServerReaderFactory(ss);
-        IDataSource serverReader = fileReaderFactory.Create();
+        var serverReader = fileReaderFactory.Create();
 
 
         IFileWriterFactory fileWriterFactory = new JSONWriterFactory();
-        IWriter jsonWriter = fileWriterFactory.Create();
+        var jsonWriter = fileWriterFactory.Create();
 
         var consoleHandler = new ConsoleHandler(jsonWriter, dir, outputDir);
         consoleHandler.HandleConsoleInput();

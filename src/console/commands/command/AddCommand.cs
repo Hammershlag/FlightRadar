@@ -1,62 +1,47 @@
-﻿using OOD_24L_01180689.src.factories.entityFactories.airports;
-using OOD_24L_01180689.src.factories.entityFactories.cargo;
-using OOD_24L_01180689.src.factories.entityFactories.flights;
-using OOD_24L_01180689.src.factories.entityFactories.people;
-using OOD_24L_01180689.src.factories.entityFactories.planes;
-using OOD_24L_01180689.src.factories.entityFactories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OOD_24L_01180689.src.dataStorage;
+﻿using OOD_24L_01180689.src.dataStorage;
 using OOD_24L_01180689.src.dto.entities;
 
-namespace OOD_24L_01180689.src.console.commands.command
+namespace OOD_24L_01180689.src.console.commands.command;
+
+public class AddCommand : Command
 {
-    public class AddCommand : Command
+    public Dictionary<string, IComparable> keyValSet = new();
+    public string objectClass;
+
+
+    public AddCommand(string objectClass, Dictionary<string, IComparable> keyValSet)
     {
-        public string objectClass;
-        public Dictionary<string, IComparable> keyValSet = new Dictionary<string, IComparable>();
-        
+        this.keyValSet = keyValSet;
+        this.objectClass = objectClass;
+    }
 
-        public AddCommand(string objectClass, Dictionary<string, IComparable> keyValSet)
+    public override bool Execute()
+    {
+        if (objectClass == null)
         {
-            this.keyValSet = keyValSet;
-            this.objectClass = objectClass;
+            Console.WriteLine("Invalid object class");
+            return false;
         }
 
-        public override bool Execute()
+
+        var factory = Entity.entityFactories[objectClass];
+        var ent = factory.Create();
+
+        Action<IComparable> setter;
+        var keys = ent.fieldSetters.Keys.Select(key => key.ToUpper()).ToList();
+
+        foreach (var field in keys)
         {
-            if (this.objectClass == null)
-            {
-                Console.WriteLine("Invalid object class");
-                return false;
-            }
-
-            EntityFactory factory = Entity.entityFactories[this.objectClass];
-            Entity ent = factory.Create();
-
-            Action<IComparable> setter;
-            List<string> keys = ent.fieldSetters.Keys.Select(key => key.ToUpper()).ToList();
-
-            foreach (var field in keys)
-            {
-                setter = ent.fieldSetters[field];
-                if (!keyValSet.TryGetValue(field, out IComparable value))
-                {
-                    setter(null);
-                }
-                else
-                {
-                    setter(value);
-                }
-            }
-
-            DataStorage.GetInstance.Add(ent);
-
-            Console.WriteLine($"Added Entity: {ent.ToString()}");
-            return true;
+            setter = ent.fieldSetters[field];
+            if (!keyValSet.TryGetValue(field, out var value))
+                setter(null);
+            else
+                setter(value);
         }
+
+        DataStorage.GetInstance.Add(ent);
+
+        Console.WriteLine($"Added Entity: {ent}");
+        return true;
     }
 }

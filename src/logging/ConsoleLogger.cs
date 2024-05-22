@@ -1,29 +1,16 @@
-﻿using System;
-using System.IO;
-using NetworkSourceSimulator;
-using OOD_24L_01180689.src.dataStorage;
-using OOD_24L_01180689.src.dto.entities.flights;
-using OOD_24L_01180689.src.dto.entities.people;
-using OOD_24L_01180689.src.dto.entities;
+﻿namespace OOD_24L_01180689.src.logging;
 
-namespace OOD_24L_01180689.src.logging
+public class ConsoleLogger : Logger
 {
-    public class ConsoleLogger : Logger
+    public override void Log(string message)
     {
-        public ConsoleLogger()
+        try
         {
+            Console.WriteLine($"{DateTime.Now}: {message}\n");
         }
-
-        public override void Log(string message)
+        catch (Exception ex)
         {
-            try
-            {
-                Console.WriteLine($"{DateTime.Now}: {message}\n");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error while logging: {ex.Message}");
-            }
+            Console.WriteLine($"Error while logging: {ex.Message}");
         }
     }
 }

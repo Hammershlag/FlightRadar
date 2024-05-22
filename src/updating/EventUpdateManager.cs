@@ -1,119 +1,102 @@
-﻿using System;
-using System.Threading.Tasks;
-using DynamicData;
-using NetworkSourceSimulator;
+﻿using NetworkSourceSimulator;
 using OOD_24L_01180689.src.dataStorage;
-using OOD_24L_01180689.src.dto.entities;
-using OOD_24L_01180689.src.dto.entities.cargo;
-using OOD_24L_01180689.src.dto.entities.flights;
-using OOD_24L_01180689.src.dto.entities.people;
 using OOD_24L_01180689.src.logging;
 using OOD_24L_01180689.src.observers;
 
-namespace OOD_24L_01180689.src.updating
+namespace OOD_24L_01180689.src.updating;
+
+public class EventUpdateManager : IObservable
 {
-    public class EventUpdateManager : IObservable
+    private static EventUpdateManager instance;
+    private static readonly object lockObject = new();
+    private readonly string input = "";
+    private readonly int maxDelay = 1;
+    private readonly int minDelay;
+
+    private NetworkSourceSimulator.NetworkSourceSimulator networkSourceSimulator;
+    private readonly List<IObserver> observers = new();
+
+    private EventUpdateManager(string input, int minDelay, int maxDelay)
     {
-        private static EventUpdateManager instance;
-        private static readonly object lockObject = new object();
+        this.input = input;
+        this.minDelay = minDelay;
+        this.maxDelay = maxDelay;
+    }
 
-        private NetworkSourceSimulator.NetworkSourceSimulator networkSourceSimulator;
-        List<IObserver> observers = new List<IObserver>();
-        private int minDelay = 0;
-        private int maxDelay = 1;
-        private string input = "";
+    public void AddObserver(IObserver observer)
+    {
+        observers.Add(observer);
+    }
 
-        private EventUpdateManager(string input, int minDelay, int maxDelay)
+    public void RemoveObserver(IObserver observer)
+    {
+        observers.Remove(observer);
+    }
+
+    public static EventUpdateManager GetInstance(string input, int minDelay, int maxDelay, ILogger logger)
+    {
+        lock (lockObject)
         {
-            this.input = input;
-            this.minDelay = minDelay;
-            this.maxDelay = maxDelay;
-        }
-
-        public static EventUpdateManager GetInstance(string input, int minDelay, int maxDelay, ILogger logger)
-        {
-            lock (lockObject)
+            if (instance == null)
             {
-                if (instance == null)
-                {
-                    instance = new EventUpdateManager(input, minDelay, maxDelay);
-                    instance.AddObserver(logger);
+                instance = new EventUpdateManager(input, minDelay, maxDelay);
+                instance.AddObserver(logger);
 
-                    instance.AddObserver(DataStorage.GetInstance);
-                }
-            }
-
-            return instance;
-        }
-
-        public async Task Start()
-        {
-            networkSourceSimulator = new NetworkSourceSimulator.NetworkSourceSimulator(input, minDelay, maxDelay);
-            this.networkSourceSimulator.OnIDUpdate += HandleIDUpdate;
-            this.networkSourceSimulator.OnPositionUpdate += HandlePositionUpdate;
-            this.networkSourceSimulator.OnContactInfoUpdate += HandleContactInfoUpdate;
-            await StartNetworkSourceSimulatorAsync();
-        }
-
-        private async Task StartNetworkSourceSimulatorAsync()
-        {
-            await Task.Run(() => networkSourceSimulator.Run());
-        }
-
-        public Message GetMessageAt(int index)
-        {
-            return networkSourceSimulator.GetMessageAt(index);
-        }
-
-        private Task stopTask()
-        {
-            return Task.CompletedTask;
-        }
-
-        public async Task Stop()
-        {
-            try
-            {
-                await stopTask();
-            }
-            catch
-            {
-                Console.WriteLine("Server Interrupted");
+                instance.AddObserver(DataStorage.GetInstance);
             }
         }
 
-        private void HandleIDUpdate(object sender, IDUpdateArgs e)
-        {
-            foreach (var obs in observers)
-            {
-                obs.Update(e);
-            }
-        }
+        return instance;
+    }
 
-        private void HandlePositionUpdate(object sender, PositionUpdateArgs e)
-        {
-            foreach (var obs in observers)
-            {
-                obs.Update(e);
-            }
-        }
+    public async Task Start()
+    {
+        networkSourceSimulator = new NetworkSourceSimulator.NetworkSourceSimulator(input, minDelay, maxDelay);
+        networkSourceSimulator.OnIDUpdate += HandleIDUpdate;
+        networkSourceSimulator.OnPositionUpdate += HandlePositionUpdate;
+        networkSourceSimulator.OnContactInfoUpdate += HandleContactInfoUpdate;
+        await StartNetworkSourceSimulatorAsync();
+    }
 
-        private void HandleContactInfoUpdate(object sender, ContactInfoUpdateArgs e)
-        {
-            foreach (var obs in observers)
-            {
-                obs.Update(e);
-            }
-        }
+    private async Task StartNetworkSourceSimulatorAsync()
+    {
+        await Task.Run(() => networkSourceSimulator.Run());
+    }
 
-        public void AddObserver(IObserver observer)
-        {
-            observers.Add(observer);
-        }
+    public Message GetMessageAt(int index)
+    {
+        return networkSourceSimulator.GetMessageAt(index);
+    }
 
-        public void RemoveObserver(IObserver observer)
+    private Task stopTask()
+    {
+        return Task.CompletedTask;
+    }
+
+    public async Task Stop()
+    {
+        try
         {
-            observers.Remove(observer);
+            await stopTask();
         }
+        catch
+        {
+            Console.WriteLine("Server Interrupted");
+        }
+    }
+
+    private void HandleIDUpdate(object sender, IDUpdateArgs e)
+    {
+        foreach (var obs in observers) obs.Update(e);
+    }
+
+    private void HandlePositionUpdate(object sender, PositionUpdateArgs e)
+    {
+        foreach (var obs in observers) obs.Update(e);
+    }
+
+    private void HandleContactInfoUpdate(object sender, ContactInfoUpdateArgs e)
+    {
+        foreach (var obs in observers) obs.Update(e);
     }
 }

@@ -1,17 +1,16 @@
 ﻿using OOD_24L_01180689.src.readers;
 
-namespace OOD_24L_01180689.src.factories.readers
-{
-    public interface IFileReaderFactory
-    {
-        IDataSource Create();
-    }
+namespace OOD_24L_01180689.src.factories.readers;
 
-    public abstract class FileReaderFactory : IFileReaderFactory
+public interface IFileReaderFactory
+{
+    IDataSource Create();
+}
+
+public abstract class FileReaderFactory : IFileReaderFactory
+{
+    public virtual IDataSource Create()
     {
-        public virtual IDataSource Create()
-        {
-            throw new NotImplementedException();
-        }
+        throw new NotImplementedException();
     }
 }

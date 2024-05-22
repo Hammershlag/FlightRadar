@@ -3,9 +3,9 @@
 public class ObjectCountDisplay
 {
     private static ObjectCountDisplay instance;
-    private Thread countDisplayThread;
+    private static readonly object instanceLock = new();
+    private readonly Thread countDisplayThread;
     private bool stay = true;
-    private static readonly object instanceLock = new object();
 
     private ObjectCountDisplay()
     {
@@ -30,15 +30,10 @@ public class ObjectCountDisplay
         get
         {
             if (instance == null)
-            {
                 lock (instanceLock)
                 {
-                    if (instance == null)
-                    {
-                        instance = new ObjectCountDisplay();
-                    }
+                    if (instance == null) instance = new ObjectCountDisplay();
                 }
-            }
 
             return instance;
         }
@@ -51,8 +46,8 @@ public class ObjectCountDisplay
             var objectListCount = DataStorage.GetInstance.CountObjectList();
             lock (instanceLock)
             {
-                int previousLeft = Console.CursorLeft;
-                int previousTop = Console.CursorTop;
+                var previousLeft = Console.CursorLeft;
+                var previousTop = Console.CursorTop;
                 Console.SetCursorPosition(0, 0);
                 Console.Write($"Current number of objects: {objectListCount}\n");
                 Console.SetCursorPosition(previousLeft, previousTop);
@@ -64,10 +59,7 @@ public class ObjectCountDisplay
 
     public void Start()
     {
-        if (!countDisplayThread.IsAlive)
-        {
-            countDisplayThread.Start();
-        }
+        if (!countDisplayThread.IsAlive) countDisplayThread.Start();
     }
 
     public void Stop()

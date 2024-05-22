@@ -1,12 +1,11 @@
 ﻿using OOD_24L_01180689.src.readers;
 
-namespace OOD_24L_01180689.src.factories.readers
+namespace OOD_24L_01180689.src.factories.readers;
+
+public class FTRReaderFactory : IFileReaderFactory
 {
-    public class FTRReaderFactory : IFileReaderFactory
+    public IDataSource Create()
     {
-        public IDataSource Create()
-        {
-            return new FTRReader();
-        }
+        return new FTRReader();
     }
 }

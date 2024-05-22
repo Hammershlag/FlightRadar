@@ -1,97 +1,85 @@
 ﻿using FlightTrackerGUI;
 using OOD_24L_01180689.src.visualization;
 
-namespace OOD_24L_01180689.src.threads
+namespace OOD_24L_01180689.src.threads;
+
+public class FlightTrackerUpdater
 {
-    public class FlightTrackerUpdater
+    private static FlightTrackerUpdater instance;
+    private static readonly object lockObject = new();
+
+    private readonly Thread guiThread;
+    private volatile bool running = true;
+    private readonly Thread updateThread;
+
+    private FlightTrackerUpdater()
     {
-        private static FlightTrackerUpdater instance;
-        private static readonly object lockObject = new object();
-
-        private Thread guiThread;
-        private Thread updateThread;
-        private volatile bool running = true;
-
-        private FlightTrackerUpdater()
+        guiThread = new Thread(InitializeGUI)
         {
-            guiThread = new Thread(InitializeGUI)
-            {
-                IsBackground = true
-            };
-            updateThread = new Thread(UpdateDataLoop)
-            {
-                IsBackground = true
-            };
-        }
-
-        public static FlightTrackerUpdater GetInstance()
+            IsBackground = true
+        };
+        updateThread = new Thread(UpdateDataLoop)
         {
-            if (instance == null)
+            IsBackground = true
+        };
+    }
+
+    public static FlightTrackerUpdater GetInstance()
+    {
+        if (instance == null)
+            lock (lockObject)
             {
-                lock (lockObject)
-                {
-                    if (instance == null)
-                    {
-                        instance = new FlightTrackerUpdater();
-                    }
-                }
+                if (instance == null) instance = new FlightTrackerUpdater();
             }
 
-            return instance;
-        }
+        return instance;
+    }
 
-        private void InitializeGUI()
+    private void InitializeGUI()
+    {
+        try
         {
+            Runner.Run();
+        }
+        catch (ThreadInterruptedException)
+        {
+            Console.WriteLine("GUI Thread was interrupted.");
+        }
+    }
+
+    private void UpdateDataLoop()
+    {
+        var flightsGUIData = new FlightsGUIDataAdapter();
+
+        while (running)
+        {
+            flightsGUIData.UpdateFlights();
+            Runner.UpdateGUI(flightsGUIData);
             try
             {
-                Runner.Run();
+                Thread.Sleep(TimeSpan.FromSeconds(1));
             }
             catch (ThreadInterruptedException)
             {
-                Console.WriteLine("GUI Thread was interrupted.");
+                Console.WriteLine("Update Thread was interrupted.");
             }
         }
+    }
 
-        private void UpdateDataLoop()
+    public void Start()
+    {
+        if (!guiThread.IsAlive && !updateThread.IsAlive)
         {
-            var flightsGUIData = new FlightsGUIDataAdapter();
-
-            while (running)
-            {
-                flightsGUIData.UpdateFlights();
-                Runner.UpdateGUI(flightsGUIData);
-                try
-                {
-                    Thread.Sleep(TimeSpan.FromSeconds(1));
-                }
-                catch (ThreadInterruptedException)
-                {
-                    Console.WriteLine("Update Thread was interrupted.");
-                }
-            }
+            guiThread.Start();
+            updateThread.Start();
         }
+    }
 
-        public void Start()
-        {
-            if (!guiThread.IsAlive && !updateThread.IsAlive)
-            {
-                guiThread.Start();
-                updateThread.Start();
-            }
-        }
+    public void Stop()
+    {
+        running = false;
+        if (guiThread.IsAlive) guiThread.Interrupt();
 
-        public void Stop()
-        {
-            running = false;
-            if (guiThread.IsAlive)
-            {
-                guiThread.Interrupt();
-            }
-
-            if (updateThread.IsAlive)
-            {
-                updateThread.Interrupt();
-            }
-        }
+        if (updateThread.IsAlive) updateThread.Interrupt();
     }
 }

@@ -1,32 +1,31 @@
-﻿using OOD_24L_01180689.src.writers;
-using OOD_24L_01180689.src.serverSimulator;
-using OOD_24L_01180689.src.dataStorage;
-using IDataSource = OOD_24L_01180689.src.readers.IDataSource;
+﻿using OOD_24L_01180689.src.dataStorage;
 using OOD_24L_01180689.src.factories.readers;
 using OOD_24L_01180689.src.factories.writersFactories;
+using OOD_24L_01180689.src.serverSimulator;
+using OOD_24L_01180689.src.writers;
 
-class ProgramPart2
+internal class ProgramPart2
 {
-    static void Main2(string[] args)
+    private static void Main2(string[] args)
     {
-        string dir = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..");
-        string input = Path.Combine(dir, "data", "input_example.ftr");
-        string outputDir = "data";
-        int minDelay = 1;
-        int maxDelay = 1;
+        var dir = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..");
+        var input = Path.Combine(dir, "data", "input_example.ftr");
+        var outputDir = "data";
+        var minDelay = 1;
+        var maxDelay = 1;
 
         var objectCountDisplay = ObjectCountDisplay.GetInstance;
         objectCountDisplay.Start();
 
-        ServerSimulator ss = ServerSimulator.GetInstance(input, minDelay, maxDelay);
+        var ss = ServerSimulator.GetInstance(input, minDelay, maxDelay);
 
         IFileReaderFactory fileReaderFactory = new ServerReaderFactory(ss);
-        IDataSource serverReader = fileReaderFactory.Create();
+        var serverReader = fileReaderFactory.Create();
 
         ss.Start();
 
         IFileWriterFactory fileWriterFactory = new JSONWriterFactory();
-        IWriter jsonWriter = fileWriterFactory.Create();
+        var jsonWriter = fileWriterFactory.Create();
 
         HandleConsoleInput(jsonWriter, dir, outputDir);
 
@@ -40,7 +39,7 @@ class ProgramPart2
         Console.WriteLine();
         Console.WriteLine("Network source simulator started. ");
         Console.WriteLine("Type 'exit' to quit, 'print' to serialize data, 'help' to display commands");
-        string consoleInput = "";
+        var consoleInput = "";
         while (true)
         {
             consoleInput = Console.ReadLine();
@@ -48,10 +47,11 @@ class ProgramPart2
             {
                 break;
             }
-            else if (consoleInput.ToLower() == "print")
+
+            if (consoleInput.ToLower() == "print")
             {
                 var objectListCopy = DataStorage.GetInstance.GetObjectList();
-                string outputFilename = DateTime.Now.ToString("'snapshot_'HH_mm_ss'.json'");
+                var outputFilename = DateTime.Now.ToString("'snapshot_'HH_mm_ss'.json'");
                 jsonWriter.Write(objectListCopy, Path.Combine(dir, outputDir), outputFilename);
                 Console.WriteLine($"Serialized data written to file: {outputFilename}");
             }

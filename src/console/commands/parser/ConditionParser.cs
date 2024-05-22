@@ -1,106 +1,76 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
-namespace OOD_24L_01180689.src.console.commands.parser
+namespace OOD_24L_01180689.src.console.commands.parser;
+
+public class ConditionParser
+
 {
-    public class ConditionParser
-
+    private static readonly Dictionary<string, Condition.ConditionType> ComparisonOperators = new()
     {
+        { "==", Condition.ConditionType.EQUAL },
+        { "!=", Condition.ConditionType.NOT_EQUAL },
+        { ">", Condition.ConditionType.GREATER },
+        { "<", Condition.ConditionType.LESS },
+        { ">=", Condition.ConditionType.GREATER_EQUAL },
+        { "<=", Condition.ConditionType.LESS_EQUAL }
+    };
 
-        private static readonly Dictionary<string, Condition.ConditionType> ComparisonOperators = new Dictionary<string, Condition.ConditionType>()
+    public ConditionsList Parse(string conditionString)
+    {
+        var conditionsList = new ConditionsList();
+
+        var parts = Regex.Split(conditionString, @"\b(and|or)\b", RegexOptions.IgnoreCase);
+
+        foreach (var part in parts)
         {
-            { "==", Condition.ConditionType.EQUAL },
-            { "!=", Condition.ConditionType.NOT_EQUAL },
-            { ">", Condition.ConditionType.GREATER },
-            { "<", Condition.ConditionType.LESS },
-            { ">=", Condition.ConditionType.GREATER_EQUAL },
-            { "<=", Condition.ConditionType.LESS_EQUAL }
-        };
+            var trimmedPart = part.Trim();
 
-        public ConditionsList Parse(string conditionString)
-        {
-            ConditionsList conditionsList = new ConditionsList();
-
-            // Split the condition string by "and" or "or" to separate conditions and conjunctions
-            string[] parts = Regex.Split(conditionString, @"\b(and|or)\b", RegexOptions.IgnoreCase);
-
-            foreach (string part in parts)
+            if (trimmedPart.Equals("or") || trimmedPart.Equals("and"))
             {
-                string trimmedPart = part.Trim();
-
-                // Ignore "and" and "or" parts, as they represent conjunctions
-                // if (trimmedPart.Equals("and", StringComparison.OrdinalIgnoreCase) ||
-                //     trimmedPart.Equals("or", StringComparison.OrdinalIgnoreCase))
-                // {
-                //     continue;
-                // }
-                if (/*conditionsList.Conditions.Count > 1 &&*/ (trimmedPart.Equals("or") || trimmedPart.Equals("and")))
-                {
-                    conditionsList.AndOrs.Add(trimmedPart.StartsWith("or", StringComparison.OrdinalIgnoreCase)
-                        ? ConditionsList.Conjunctions.OR
-                        : ConditionsList.Conjunctions.AND);
-                    continue;
-                }
-                // Parse each condition
-                Condition condition = ParseSingleCondition(trimmedPart);
-                try
-                {
-                    conditionsList.AddCondition(condition);
-                }
-                catch { continue;}
-
-                // Parse the conjunction after each condition
-                
+                conditionsList.AndOrs.Add(trimmedPart.StartsWith("or", StringComparison.OrdinalIgnoreCase)
+                    ? ConditionsList.Conjunctions.OR
+                    : ConditionsList.Conjunctions.AND);
+                continue;
             }
 
-            return conditionsList;
+            var condition = ParseSingleCondition(trimmedPart);
+            try
+            {
+                conditionsList.AddCondition(condition);
+            }
+            catch
+            {
+            }
         }
 
-        private Condition ParseSingleCondition(string conditionString)
-        {
-            // Split the condition string by comparison operators
-            string[] parts = conditionString.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+        return conditionsList;
+    }
 
-            if (parts.Length != 3)
-            {
-                throw new FormatException("Invalid condition format.");
-            }
+    private Condition ParseSingleCondition(string conditionString)
+    {
+        var parts = conditionString.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
 
-            string field = parts[0];
-            string comparisonOperator = parts[1];
-            string value = parts[2];
+        if (parts.Length != 3) throw new FormatException("Invalid condition format.");
 
-            // Parse the comparison operator
-            if (!ComparisonOperators.TryGetValue(comparisonOperator, out Condition.ConditionType type))
-                throw new InvalidDataException("Invalid data");
+        var field = parts[0];
+        var comparisonOperator = parts[1];
+        var value = parts[2];
 
-            // Parse the value to appropriate data type
-            IComparable parsedValueRight = ParseValue(value);
-            IComparable parsedValueLeft = ParseValue(field);
+        if (!ComparisonOperators.TryGetValue(comparisonOperator, out var type))
+            throw new InvalidDataException("Invalid data");
 
-            // Create and return the condition
-            return new Condition(parsedValueLeft, parsedValueRight, type);
-        }
+        var parsedValueRight = ParseValue(value);
+        var parsedValueLeft = ParseValue(field);
 
-        private IComparable ParseValue(string value)
-        {
-            
-            // Try to parse the value as int, if successful, return it
-            if (ulong.TryParse(value, out ulong intValue))
-            {
-                return intValue;
-            }
+        return new Condition(parsedValueLeft, parsedValueRight, type);
+    }
 
-            // Try to parse the value as float, if successful, return it
-            if (float.TryParse(value, out float floatValue))
-            {
-                return floatValue;
-            }
+    private IComparable ParseValue(string value)
+    {
+        if (ulong.TryParse(value, out var intValue)) return intValue;
 
-            // Otherwise, return it as string
-            return value;
-        }
+        if (float.TryParse(value, out var floatValue)) return floatValue;
+
+        return value;
     }
 }

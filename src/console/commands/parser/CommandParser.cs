@@ -1,135 +1,116 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using OOD_24L_01180689.src.console.commands.command;
+﻿using OOD_24L_01180689.src.console.commands.command;
 using OOD_24L_01180689.src.factories.commandFactories;
 
-namespace OOD_24L_01180689.src.console.commands.parser
+namespace OOD_24L_01180689.src.console.commands.parser;
+
+public class CommandParser : Parser
 {
-    public class CommandParser
+    private readonly ConditionParser conditionParser = new();
+
+    private readonly Dictionary<string, CommandFactory> factories = new()
     {
-        private readonly Dictionary<string, CommandFactory> factories = new Dictionary<string, CommandFactory>()
+        { "add", new AddCommandFactory() },
+        { "display", new DisplayCommandFactory() },
+        { "delete", new RemoveCommandFactory() },
+        { "update", new UpdateCommandFactory() }
+    };
+
+    public override Command Parse(string command)
+    {
+        var parts = command.Split(' ').ToList();
+        var commandType = parts[0].ToLower();
+
+        if (factories.ContainsKey(commandType))
         {
-            {"add", new AddCommandFactory()},
-            {"display", new DisplayCommandFactory()},
-            {"delete", new RemoveCommandFactory()},
-            {"update", new UpdateCommandFactory()},
-        };
+            var factory = factories[commandType];
+            parts.RemoveAt(0);
 
-        private readonly ConditionParser conditionParser = new ConditionParser();
+            var object_class = "";
+            Dictionary<string, IComparable> key_val_set = null;
+            List<string> object_fields = null;
+            ConditionsList conditionsList = null;
+            var testFromOneField = new List<string>
+                { "Airport", "Cargo", "Flight", "Crew", "Passenger", "CargoPlane", "PassengerPlane" };
 
-        public Command Parse(string command)
-        {
-            List<string> parts = command.Split(' ').ToList();
-            string commandType = parts[0].ToLower();
-
-            if (factories.ContainsKey(commandType))
+            if (!testFromOneField.Contains(parts[0]))
             {
-                CommandFactory factory = factories[commandType];
+                object_fields = parts[0].Split(',').ToList();
                 parts.RemoveAt(0);
+                parts.RemoveAt(0);
+            }
 
-                string object_class = "";
-                Dictionary<string, IComparable> key_val_set = null;
-                List<string> object_fields = null;
-                ConditionsList conditionsList = null;
-                List<string> testFromOneField = new List<string>()
-                    { "Airport", "Cargo", "Flight", "Crew", "Passenger", "CargoPlane", "PassengerPlane" };
+            object_class = parts[0];
+            parts.RemoveAt(0);
 
-                if (!testFromOneField.Contains(parts[0]))
+
+            while (parts.Count > 0)
+                if (parts[0] == "where")
                 {
-                    object_fields = parts[0].Split(',').ToList();
+                    conditionsList = ParseConditionsList(parts.Skip(1).ToArray());
+                    break;
+                }
+                else if (parts[0] == "set" || parts[0] == "new")
+                {
                     parts.RemoveAt(0);
+
+                    key_val_set = ParseKeyValSet(parts[0]);
                     parts.RemoveAt(0);
                 }
 
-                object_class = parts[0];
-                parts.RemoveAt(0);
+            return factory.Create(object_class, key_val_set, object_fields, conditionsList);
+        }
 
+        ConsoleHandler.DisplayHelp();
 
+        return null;
+    }
 
-                while(parts.Count > 0){
-                    if (parts[0] == "where")
-                    {
-                        conditionsList = ParseConditionsList(parts.Skip(1).ToArray());
-                        break;
-                    } else if (parts[0] == "set" || parts[0] == "new")
-                    {
-                        parts.RemoveAt(0);
+    private Dictionary<string, IComparable>? ParseKeyValSet(string part)
+    {
+        var pairs = part.Trim('(', ')').Split(';');
 
-                        key_val_set = ParseKeyValSet(parts[0]);
-                        parts.RemoveAt(0);
-                    }
-                }
+        var keyValSet = new Dictionary<string, IComparable>();
 
-                return factory.Create(object_class, key_val_set, object_fields, conditionsList);
+        foreach (var pair in pairs)
+        {
+            var keyValue = pair.Split('=');
+
+            var key = keyValue[0];
+            var value = keyValue[1];
+
+            key = key.Trim().ToUpper();
+            value = value.Trim();
+
+            if (ulong.TryParse(value, out var ulongValue))
+            {
+                keyValSet[key] = ulongValue;
+            }
+            else if (float.TryParse(value, out var floatValue))
+            {
+                keyValSet[key] = floatValue;
+            }
+            else if (value.StartsWith("\"") && value.EndsWith("\""))
+            {
+                var stringValue = value.Trim('"');
+                keyValSet[key] = stringValue;
             }
             else
             {
-                ConsoleHandler.DisplayHelp();
+                throw new FormatException($"Invalid value format for key '{key}'.");
             }
-
-            return null;
         }
 
-        private Dictionary<string, IComparable>? ParseKeyValSet(string part)
-        {
-            // Remove the parentheses and split the string by commas
-            string[] pairs = part.Trim('(', ')').Split(';');
-
-            // Initialize the dictionary to store key-value pairs
-            Dictionary<string, IComparable> keyValSet = new Dictionary<string, IComparable>();
-
-            // Iterate over each key-value pair
-            foreach (string pair in pairs)
-            {
-                // Split the pair into key and value
-                string[] keyValue = pair.Split('=');
-
-                // Extract the key and value
-                string key = keyValue[0];
-                string value = keyValue[1];
-
-                // Remove any leading or trailing spaces
-                key = key.Trim().ToUpper();
-                value = value.Trim();
-
-                // Determine the data type of the value and parse it accordingly
-                if (ulong.TryParse(value, out ulong ulongValue))
-                {
-                    keyValSet[key] = ulongValue;
-                }
-                else if (float.TryParse(value, out float floatValue))
-                {
-                    keyValSet[key] = floatValue;
-                }
-                else if (value.StartsWith("\"") && value.EndsWith("\""))
-                {
-                    // Remove the double quotes from the string value
-                    string stringValue = value.Trim('"');
-                    keyValSet[key] = stringValue;
-                }
-                else
-                {
-                    throw new FormatException($"Invalid value format for key '{key}'.");
-                }
-            }
-
-            return keyValSet;
-        }
+        return keyValSet;
+    }
 
 
-        private ConditionsList ParseConditionsList(string[] parts)
-        {
-            if (parts.Length == 0)
-            {
-                return null;
-            }
+    private ConditionsList ParseConditionsList(string[] parts)
+    {
+        if (parts.Length == 0) return null;
 
-            string conditionsString = string.Join(" ", parts);
+        var conditionsString = string.Join(" ", parts);
 
-            ConditionParser cp = new ConditionParser();
-            return cp.Parse(conditionsString);
-        }
-
+        var cp = new ConditionParser();
+        return cp.Parse(conditionsString);
     }
 }

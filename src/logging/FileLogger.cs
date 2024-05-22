@@ -1,64 +1,48 @@
-﻿using System;
-using System.IO;
-using NetworkSourceSimulator;
-using OOD_24L_01180689.src.dataStorage;
-using OOD_24L_01180689.src.dto.entities;
-using OOD_24L_01180689.src.dto.entities.flights;
-using OOD_24L_01180689.src.dto.entities.people;
+﻿namespace OOD_24L_01180689.src.logging;
 
-namespace OOD_24L_01180689.src.logging
+internal class FileLogger : Logger
 {
-    internal class FileLogger : Logger
+    private readonly string filename = "";
+
+    public FileLogger(string filename)
     {
-        private string filename = "";
+        this.filename = filename;
+    }
 
-        public FileLogger(string filename)
+    public FileLogger()
+    {
+        var dir = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..");
+        var logDirectory = Path.Combine(dir, "data");
+        if (!Directory.Exists(logDirectory)) Directory.CreateDirectory(logDirectory);
+
+        var todayLogFileName = Path.Combine(logDirectory, $"log_{DateTime.Now.ToString("yyyy-MM-dd")}.txt");
+        if (!File.Exists(todayLogFileName))
+            using (var writer = File.CreateText(todayLogFileName))
+            {
+                writer.WriteLine($"Log created on {DateTime.Now}\n");
+            }
+        else
+            using (var writer = File.AppendText(todayLogFileName))
+            {
+                writer.WriteLine($"\nLog updated on {DateTime.Now}\n");
+            }
+
+
+        filename = todayLogFileName;
+    }
+
+    public override void Log(string message)
+    {
+        try
         {
-            this.filename = filename;
+            using (var writer = File.AppendText(filename))
+            {
+                writer.WriteLine($"{DateTime.Now}: {message}");
+            }
         }
-
-        public FileLogger()
+        catch (Exception ex)
         {
-            string dir = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..");
-            string logDirectory = Path.Combine(dir, "data");
-            if (!Directory.Exists(logDirectory))
-            {
-                Directory.CreateDirectory(logDirectory);
-            }
-
-            string todayLogFileName = Path.Combine(logDirectory, $"log_{DateTime.Now.ToString("yyyy-MM-dd")}.txt");
-            if (!File.Exists(todayLogFileName))
-            {
-                using (StreamWriter writer = File.CreateText(todayLogFileName))
-                {
-                    writer.WriteLine($"Log created on {DateTime.Now}\n");
-                }
-            }
-            else
-            {
-                using (StreamWriter writer = File.AppendText(todayLogFileName))
-                {
-                    writer.WriteLine($"\nLog updated on {DateTime.Now}\n");
-                }
-            }
-
-
-            filename = todayLogFileName;
-        }
-
-        public override void Log(string message)
-        {
-            try
-            {
-                using (StreamWriter writer = File.AppendText(filename))
-                {
-                    writer.WriteLine($"{DateTime.Now}: {message}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error while logging: {ex.Message}");
-            }
+            Console.WriteLine($"Error while logging: {ex.Message}");
         }
     }
 }

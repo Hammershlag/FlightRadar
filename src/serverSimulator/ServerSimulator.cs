@@ -1,73 +1,67 @@
 ﻿using NetworkSourceSimulator;
 
-namespace OOD_24L_01180689.src.serverSimulator
+namespace OOD_24L_01180689.src.serverSimulator;
+
+public class ServerSimulator
 {
-    public class ServerSimulator
+    private static ServerSimulator instance;
+    private static readonly object lockObject = new();
+    private readonly string input = "";
+    private readonly int maxDelay = 1;
+
+    private readonly int minDelay;
+    private NetworkSourceSimulator.NetworkSourceSimulator networkSourceInstance;
+
+    private ServerSimulator(string input, int minDelay, int maxDelay)
     {
-        private static ServerSimulator instance;
-        private static readonly object lockObject = new object();
+        this.input = input;
+        this.minDelay = minDelay;
+        this.maxDelay = maxDelay;
+    }
 
-        private int minDelay = 0;
-        private int maxDelay = 1;
-        private string input = "";
-        private NetworkSourceSimulator.NetworkSourceSimulator networkSourceInstance;
+    public event EventHandler<NewDataReadyArgs> OnDataReady;
 
-        public event EventHandler<NewDataReadyArgs> OnDataReady;
-
-        private ServerSimulator(string input, int minDelay, int maxDelay)
+    public static ServerSimulator GetInstance(string input, int minDelay, int maxDelay)
+    {
+        lock (lockObject)
         {
-            this.input = input;
-            this.minDelay = minDelay;
-            this.maxDelay = maxDelay;
+            if (instance == null) instance = new ServerSimulator(input, minDelay, maxDelay);
         }
 
-        public static ServerSimulator GetInstance(string input, int minDelay, int maxDelay)
-        {
-            lock (lockObject)
-            {
-                if (instance == null)
-                {
-                    instance = new ServerSimulator(input, minDelay, maxDelay);
-                }
-            }
+        return instance;
+    }
 
-            return instance;
+    public void Start()
+    {
+        networkSourceInstance = new NetworkSourceSimulator.NetworkSourceSimulator(input, minDelay, maxDelay);
+        networkSourceInstance.OnNewDataReady += (sender, e) => { OnDataReady?.Invoke(this, e); };
+        StartNetworkSourceSimulator();
+    }
+
+    private void StartNetworkSourceSimulator()
+    {
+        Task.Run(networkSourceInstance.Run);
+    }
+
+    private Task stopTask()
+    {
+        return Task.CompletedTask;
+    }
+
+    public Message GetMessageAt(int index)
+    {
+        return networkSourceInstance.GetMessageAt(index);
+    }
+
+    public void Stop()
+    {
+        try
+        {
+            stopTask().Wait();
         }
-
-        public void Start()
+        catch
         {
-            networkSourceInstance = new NetworkSourceSimulator.NetworkSourceSimulator(input, minDelay, maxDelay);
-            networkSourceInstance.OnNewDataReady += (sender, e) => { OnDataReady?.Invoke(this, e); };
-            StartNetworkSourceSimulator();
-        }
-
-        private void StartNetworkSourceSimulator()
-        {
-            Task.Run(networkSourceInstance.Run);
-
-        }
-
-        private Task stopTask()
-        {
-            return Task.CompletedTask;
-        }
-
-        public Message GetMessageAt(int index)
-        {
-            return networkSourceInstance.GetMessageAt(index);
-        }
-
-        public void Stop()
-        {
-            try
-            {
-                stopTask().Wait();
-
-            }
-            catch
-            {
-                Console.WriteLine("Server Interrupted");
-            }
+            Console.WriteLine("Server Interrupted");
         }
     }
 }
