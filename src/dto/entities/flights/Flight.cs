@@ -84,9 +84,9 @@ public class Flight : Entity
         fieldSetters["ORIGINID"] = value => OriginID = value == null ? ulong.MaxValue : (ulong)value;
         fieldSetters["TARGETID"] = value => TargetID = value == null ? ulong.MaxValue : (ulong)value;
         fieldSetters["TAKEOFFTIME"] = value =>
-            TakeOffTime = value == null ? "Uninitialized" : ((DateTime)value).ToString("HH:mm");
+            TakeOffTime = value == null ? DateTime.Now.ToString() : ((DateTime)value).ToString("HH:mm");
         fieldSetters["LANDINGTIME"] = value =>
-            LandingTime = value == null ? "Uninitialized" : ((DateTime)value).ToString("HH:mm");
+            LandingTime = value == null ? DateTime.Now.ToString() : ((DateTime)value).ToString("HH:mm");
         fieldSetters["LONGITUDE"] = value => Longitude = value == null ? float.MaxValue : (float)value;
         fieldSetters["LATITUDE"] = value => Latitude = value == null ? float.MaxValue : (float)value;
         fieldSetters["AMSL"] = value => AMSL = value == null ? float.MaxValue : (float)value;
