@@ -35,3 +35,23 @@ It is expected to make a system to manage events in a smart way.
 Use observer pattern
 Logging - previous state and then new state
 OnIDUpdate - if we update for example passenger id from 0 to 999 we should update it everywhere. Like in flights etc
+
+
+Part 6
+Command testing:
+display ID,Name,Latitude,PhoneNumber,AMSL,Longitude from Flight where AMSL < 1100,01 or AMSL > 12000,01
+display ID,Model,Name,CountryISO from PassengerPlane where CountryIso == FRA
+update Flight set (ID=10000) where ID == 34 or ID == 50
+delete Flight where ID == 34 or ID == 50
+add Flight new (ID=12345;LATITUDE=10000,01)
+
+display ID,CrewID from Flight where ID == 1090
+delete Crew where ID == 44
+
+update Crew set (ID=12345;Type="ABCDD";Name="Johnny") where ID == 44
+display * from Crew where ID == 44
+
+Parser +
+Conditions +
+Display +
+Add +

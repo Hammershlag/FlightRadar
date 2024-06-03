@@ -15,8 +15,8 @@ internal class Program
         var input = Path.Combine(dir, "data", "input_example.ftr");
         var update = Path.Combine(dir, "data", "update_example.ftre");
         var outputDir = "data";
-        var minDelay = 10;
-        var maxDelay = 20;
+        var minDelay = 100;
+        var maxDelay = 150;
         ILogger logger = new FileLogger();
 
         Console.Clear();
